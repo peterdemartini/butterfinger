@@ -1,14 +1,15 @@
 #!/bin/bash
 
-CONFIG_DIR="/etc/butterfinger"
-MOVIE_DIR="/data/butterfinger"
-PLEX_ENV_FILE='/tmp/plex-env-file.env'
+CONFIG_DIR='/opt/butterfinger/config'
+MOVIE_DIR='/opt/butterfinger/data'
+PLEX_ENV_FILE='/opt/butterfinger/env/plexpass.env'
 DOCKER_IMAGE='timhaak/plexpass'
 
 setup() {
   echo "* plex setup"
-  mkdir -p "$CONFIG_DIR"
-  mkdir -p "$MOVIE_DIR"
+  sudo mkdir -p "$CONFIG_DIR"
+  sudo mkdir -p "$MOVIE_DIR"
+  sudo mkdir -p "$(dirname "$PLEX_ENV_FILE")"
 }
 
 get_docker_image() {
