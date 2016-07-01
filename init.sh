@@ -24,7 +24,7 @@ run_script() {
 
 main() {
   echo "* starting butterfinger setup"
-  sudo /tmp/.enable-sudo-at-first
+  sudo touch /tmp/.enable-sudo-at-first
   create_scripts_dir || exit 1
   download_script "init-server.sh" || exit 1
   download_script "init-docker.sh" || exit 1

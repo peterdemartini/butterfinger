@@ -4,14 +4,14 @@ BUTTERFINGER_IDENTITY="$HOME/.ssh/butterfinger_id_rsa"
 
 ssh_to_server_as_root() {
   echo "* sshing to root"
-  local ip="$1"
+  local hostname="$1"
   ssh "root@$1" 'bash -s' < "./setup-user.sh"
 }
 
 copy_key() {
   echo "* copying key to server"
-  local ip="$1"
-  ssh-copy-id -i "$BUTTERFINGER_IDENTITY" butterfinger@"$ip"
+  local hostname="$1"
+  ssh-copy-id -i "$BUTTERFINGER_IDENTITY" butterfinger@"$hostname"
 }
 
 add_key() {
@@ -20,13 +20,14 @@ add_key() {
 }
 
 ssh_to_server_as_butterfinger() {
-  ssh "butterfinger@$ip" 'bash -s' < "./start-init.local.sh"
+  local hostname="$1"
+  ssh "butterfinger@$hostname" 'bash -s' < "./start-init.local.sh"
 }
 
 main() {
-  local ip="$1"
-  if [ -z "$ip" ]; then
-    echo "Missing ip argument"
+  local hostname="$1"
+  if [ -z "$hostname" ]; then
+    echo "Missing hostname argument"
     exit 1
   fi
   if [ ! -f "$BUTTERFINGER_IDENTITY" ]; then
@@ -34,9 +35,10 @@ main() {
     exit 1
   fi
   echo "* setting up locally"
-  ssh_to_server_as_root "$ip"
-  add_key "$ip"
-  ssh_to_server_as_butterfinger
+  ssh_to_server_as_butterfinger "$hostname"
+  ssh_to_server_as_root "$hostname"
+  add_key "$hostname"
+  ssh_to_server_as_butterfinger "$hostname"
   echo "* done."
 }
 
