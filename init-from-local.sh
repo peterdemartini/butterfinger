@@ -7,7 +7,7 @@ get_first_commands() {
   echo "  adduser butterfinger"
   echo "  usermod -aG sudo butterfinger"
   echo "  cat /etc/sudoers | grep 'butterfinger'"
-  echo "  echo 'butterfinger ALL=(ALL:ALL) ALL' >> /etc/sudoers"
+  echo "  echo 'butterfinger ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers"
 }
 
 ssh_to_server_as_root() {
@@ -17,10 +17,15 @@ ssh_to_server_as_root() {
   ssh "root@$1" "$(get_first_commands)"
 }
 
-add_key() {
-  echo "* adding key"
+copy_key() {
+  echo "* copying key to server"
   local ip="$1"
   ssh-copy-id -i "$BUTTERFINGER_IDENTITY" butterfinger@"$ip"
+}
+
+add_key() {
+  echo "* adding key"
+  ssh-add "$BUTTERFINGER_IDENTITY"
 }
 
 ssh_to_server_as_butterfinger() {
