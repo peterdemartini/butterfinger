@@ -12,14 +12,17 @@ download_script() {
   echo "* downloading"
   local script="$1"
   local repo="https://raw.githubusercontent.com/peterdemartini/butterfinger"
-  curl -fsS "${repo}/master/${script}" -o "${SCRIPTS_DIR}/${script}" || exit 1
-  chmod +x "${SCRIPTS_DIR}/${script}"
+  local file_path="${SCRIPTS_DIR}/${script}"
+  rm "$file_path"
+  curl -fsS "${repo}/master/${script}" -o "$file_path" || exit 1
+  chmod +x "$file_path"
 }
 
 run_script() {
   echo "* running script"
   local script="$1"
-  "${SCRIPTS_DIR}/${script}" || exit 1
+  local file_path="${SCRIPTS_DIR}/${script}"
+  "$file_path" || exit 1
 }
 
 main() {
