@@ -2,12 +2,12 @@
 
 apt_update() {
   echo "* apt-get update"
-  sudo apt-get update
+  sudo apt-get update -y
 }
 
 install_docker_deps() {
   echo "* install docker deps"
-  sudo apt-get install apt-transport-https ca-certificates
+  sudo apt-get install -y apt-transport-https ca-certificates
 }
 
 add_key() {

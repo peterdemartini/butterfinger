@@ -3,11 +3,16 @@
 BUTTERFINGER_IDENTITY="$HOME/.ssh/butterfinger_id_rsa"
 
 get_first_commands() {
-  echo "(adduser butterfinger && usermod -aG sudo butterfinger && (cat /etc/sudoers | grep 'butterfinger' && echo 'butterfinger ALL=(ALL:ALL) ALL' >> /etc/sudoers)"
+  echo "* Run this commands"
+  echo "  adduser butterfinger"
+  echo "  usermod -aG sudo butterfinger"
+  echo "  cat /etc/sudoers | grep 'butterfinger'"
+  echo "  echo 'butterfinger ALL=(ALL:ALL) ALL' >> /etc/sudoers"
 }
 
 ssh_to_server_as_root() {
   echo "* sshing to root"
+  get_first_commands
   local ip="$1"
   ssh "root@$1" "$(get_first_commands)"
 }
@@ -35,6 +40,7 @@ main() {
   echo "* setting up locally"
   ssh_to_server_as_root "$ip"
   add_key "$ip"
+  ssh_to_server_as_butterfinger
   echo "* done."
 }
 
