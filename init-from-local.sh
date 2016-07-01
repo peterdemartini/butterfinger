@@ -2,19 +2,10 @@
 
 BUTTERFINGER_IDENTITY="$HOME/.ssh/butterfinger_id_rsa"
 
-get_first_commands() {
-  echo "* Run this commands"
-  echo "  adduser butterfinger"
-  echo "  usermod -aG sudo butterfinger"
-  echo "  cat /etc/sudoers | grep 'butterfinger'"
-  echo "  echo 'butterfinger ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers"
-}
-
 ssh_to_server_as_root() {
   echo "* sshing to root"
-  get_first_commands
   local ip="$1"
-  ssh "root@$1" "$(get_first_commands)"
+  ssh "root@$1" 'bash -s' < "./setup-user.sh"
 }
 
 copy_key() {
@@ -29,7 +20,7 @@ add_key() {
 }
 
 ssh_to_server_as_butterfinger() {
-  ssh "butterfinger@$ip"
+  ssh "butterfinger@$ip" 'bash -s' < "./start-init.local.sh"
 }
 
 main() {
