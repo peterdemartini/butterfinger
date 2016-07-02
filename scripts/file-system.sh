@@ -1,6 +1,8 @@
 #!/bin/bash
 
-source '/tmp/butterfinger-scripts/base.sh'
+if [ -z "$BASE_DIR" ]; then
+  source '/tmp/butterfinger-scripts/base.sh'
+fi
 
 B2_FUSE_DIR="$PROJECTS_DIR/b2_fuse"
 
