@@ -4,8 +4,8 @@ BASE_DIR='/opt/butterfinger'
 CONFIG_DIR="$BASE_DIR/config"
 MOVIE_DIR="$BASE_DIR/data"
 SERVICES_DIR="$BASE_DIR/services"
-PLEX_ENV_FILE="$BASE_DIR/env/plexpass.env"
-PLEX_SERVICE_NAME="plex-media-server"
+PLEX_ENV_FILE="$BASE_DIR/env/plex-media-server.list"
+PLEX_SERVICE_NAME='plex-media-server'
 DOCKER_IMAGE='timhaak/plexpass'
 
 setup() {
@@ -16,6 +16,7 @@ setup() {
   sudo mkdir -p "$(dirname "$PLEX_ENV_FILE")"
   sudo mkdir -p "$SERVICES_DIR"
   sudo chmod -R 0775 "$BASE_DIR"
+  sudo chgrp -R butterfinger "$BASE_DIR"
 }
 
 stop_if_needed() {
@@ -25,10 +26,10 @@ stop_if_needed() {
 
 write_env() {
   echo '* writing env for plex'
-  echo 'SKIP_CHOWN_CONFIG=false' | sudo tee "$PLEX_ENV_FILE"
-  echo "PLEX_USERNAME=$PLEX_USERNAME" | sudo tee --append  "$PLEX_ENV_FILE"
-  echo "PLEX_PASSWORD=$PLEX_PASSWORD" | sudo tee --append  "$PLEX_ENV_FILE"
-  echo 'PLEX_EXTERNALPORT=80' | sudo tee --append  "$PLEX_ENV_FILE"
+  echo 'SKIP_CHOWN_CONFIG=false' | tee "$PLEX_ENV_FILE"
+  echo "PLEX_USERNAME=$PLEX_USERNAME" | tee --append  "$PLEX_ENV_FILE"
+  echo "PLEX_PASSWORD=$PLEX_PASSWORD" | tee --append  "$PLEX_ENV_FILE"
+  echo 'PLEX_EXTERNALPORT=80' | tee --append  "$PLEX_ENV_FILE"
   # echo "PLEX_TOKEN=" >> "$PLEX_ENV_FILE"
 }
 
