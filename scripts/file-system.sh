@@ -22,8 +22,8 @@ install_fusepy() {
 
 mount_b2_fuse() {
   echo '* mount b2 fuse'
-  pushd "$B2_FUSE_DIR/b2fuse.py" > /dev/null
-    python ./b2fuse.py "$PLEX_DATA_DIR/.b2-secure"
+  pushd "$B2_FUSE_DIR" > /dev/null
+    python "$B2_FUSE_DIR/b2fuse.py" "$PLEX_DATA_DIR/.b2-secure"
   popd > /dev/null
 }
 
