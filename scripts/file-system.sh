@@ -14,7 +14,7 @@ install_encfs() {
 }
 
 download_b2_fuse(){
-  if [ -f "$B2_FUSE_DIR" ]; then
+  if [ -d "$B2_FUSE_DIR" ]; then
     echo '* updating b2_fuse'
     pushd "$B2_FUSE_DIR"
       git pull
