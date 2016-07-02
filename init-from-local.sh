@@ -3,27 +3,27 @@
 BUTTERFINGER_IDENTITY="$HOME/.ssh/butterfinger_id_rsa"
 
 ssh_to_server_as_root() {
-  echo "* sshing to root"
+  echo '* sshing to root'
   local hostname="$1"
-  echo "Run the following commands:"
-  cat "./setup-user.sh"
-  ssh "root@$1"
+  echo 'Run the following commands:'
+  ssh "root@$hostname" | 'bash -si' < './setup-user.sh'
 }
 
 copy_key() {
-  echo "* copying key to server"
+  echo '* copying key to server'
   local hostname="$1"
   ssh-copy-id -i "$BUTTERFINGER_IDENTITY" butterfinger@"$hostname"
 }
 
 add_key() {
-  echo "* adding key"
+  echo '* adding key'
   ssh-add "$BUTTERFINGER_IDENTITY"
 }
 
 ssh_to_server_as_butterfinger() {
+  echo '* ssh into butterfinger'
   local hostname="$1"
-  ssh "butterfinger@$hostname" 'bash -s' < "./start-init.local.sh"
+  ssh "butterfinger@$hostname" 'bash -si' < './start-init.local.sh'
 }
 
 usage() {

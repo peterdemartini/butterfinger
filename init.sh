@@ -9,18 +9,18 @@ create_scripts_dir() {
 }
 
 download_script() {
-  echo "* downloading"
   local script="$1"
   local repo="https://raw.githubusercontent.com/peterdemartini/butterfinger"
   local file_path="${SCRIPTS_DIR}/${script}"
+  echo "* downloading $script"
   rm "$file_path" &> /dev/null
   curl -fsS "${repo}/master/${script}" -o "$file_path" || exit 1
   chmod +x "$file_path"
 }
 
 run_script() {
-  echo "* running script"
   local script="$1"
+  echo "* running script $script"
   local file_path="${SCRIPTS_DIR}/${script}"
   "$file_path" || exit 1
 }

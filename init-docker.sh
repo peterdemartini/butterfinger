@@ -49,7 +49,7 @@ purge_it() {
   sudo apt-get purge lxc-docker
 }
 
-main() {
+main_old() {
   echo "* running init-docker.sh..."
   apt_update && \
     prerequisites && \
@@ -66,6 +66,17 @@ main() {
 
   echo "* failed to run init-docker.sh"
   exit 1
+}
+
+main() {
+  echo "* running init-docker.sh..."
+  curl -sSL https://get.docker.com/ | sh
+  local excode = "$?"
+  if [ "$excode" != "0" ]; then
+    echo "* failed to init-docker.sh"
+    exit 1
+  fi
+  echo "* done."
 }
 
 main "$@"
