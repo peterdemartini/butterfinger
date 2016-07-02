@@ -27,8 +27,17 @@ download_b2_fuse(){
 
 install_fusepy() {
   pushd "$B2_FUSE_DIR"
-    echo '* installing python-yaml python-pip'
-    sudo apt-get install -y python-yaml python-pip || return 1
+    echo '* installing python-yaml'
+    sudo apt-get install -y python-yaml || return 1
+
+    if [ ! -z "$(which pip)" ]; then
+      echo '* updating pip'
+      pip install --upgrade pip
+    else
+      echo '* installing pip'
+      sudo apt-get install -y python-pip || return 1
+    fi
+
     if [ -z "$(which fusepy)" ]; then
       echo '* install fusepy'
       sudo python -m pip install fusepy || return 1
