@@ -6,8 +6,10 @@ apt_update() {
 }
 
 install_git() {
-  echo "* installing git"
-  sudo apt-get install -y git
+  if [ -z "$(which git)" ]; then
+    echo "* installing git"
+    sudo apt-get install -y git
+  fi
 }
 
 main() {

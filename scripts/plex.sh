@@ -2,7 +2,9 @@
 
 CONFIG_DIR='/opt/butterfinger/config'
 MOVIE_DIR='/opt/butterfinger/data'
+SERVICES_DIR='/opt/butterfinger/services'
 PLEX_ENV_FILE='/opt/butterfinger/env/plexpass.env'
+PLEX_SERVICE_NAME="plex-media-server"
 DOCKER_IMAGE='timhaak/plexpass'
 
 setup() {
@@ -10,28 +12,7 @@ setup() {
   sudo mkdir -p "$CONFIG_DIR"
   sudo mkdir -p "$MOVIE_DIR"
   sudo mkdir -p "$(dirname "$PLEX_ENV_FILE")"
-}
-
-get_docker_image() {
-  echo "* pull $DOCKER_IMAGE"
-  docker pull "$DOCKER_IMAGE"
-}
-
-preclean() {
-  echo "* pre-clean plex run"
-  docker rm -f plexpass
-}
-
-run_it() {
-  echo "* running plex"
-  docker run \
-    --restart=always \
-    --envfile "$PLEX_ENV_FILE"
-    -d --name plex \
-    -h "$(/etc/hostname)" \
-    -v "$CONFIG_DIR:/config" \
-    -v "$MOVIE_DIR:/data" \
-    -p 32400:32400 "$DOCKER_IMAGE"
+  sudo mkdir -p "$SERVICES_DIR"
 }
 
 write_env() {
@@ -41,6 +22,19 @@ write_env() {
   echo "PLEX_PASSWORD=$PLEX_PASSWORD" | sudo tee --append  "$PLEX_ENV_FILE"
   echo "PLEX_EXTERNALPORT=80" | sudo tee --append  "$PLEX_ENV_FILE"
   # echo "PLEX_TOKEN=" >> "$PLEX_ENV_FILE"
+}
+
+download_service_file() {
+  echo '* downloading plex service file'
+  local repo='https://raw.githubusercontent.com/peterdemartini/butterfinger'
+  curl -sSL "${repo}/master/services/$filename" -o "$SERVICES_DIR/$PLEX_SERVICE_NAME.service" || \
+    (echo 'failed to download service file' && exit 1)
+  sudo systemctl enable "$SERVICES_DIR/$PLEX_SERVICE_NAME.service"
+}
+
+start_service() {
+  echo '* starting service'
+  sudo systemctl start "$PLEX_SERVICE_NAME"
 }
 
 main() {
@@ -55,9 +49,8 @@ main() {
   fi
   setup && \
     write_env && \
-    get_docker_image && \
-    preclean && \
-    run_it && \
+    download_service_file && \
+    start_service && \
     echo "* done." && \
     exit 0
 

@@ -2,7 +2,7 @@
 
 check_daemon() {
   echo '* checking daemon'
-  docker | grep 'Cannot connect to the Docker daemon' > /dev/null
+  docker ps | grep 'Cannot connect to the Docker daemon'
 }
 
 remove_docker() {

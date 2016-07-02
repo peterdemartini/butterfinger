@@ -1,0 +1,21 @@
+[Unit]
+Description=Plex Media Server
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+Restart=always
+ExecStartPre=-/usr/bin/docker stop timhaak/plexpass
+ExecStartPre=-/usr/bin/docker rm -f timhaak/plexpass
+ExecStartPre=/usr/bin/docker pull --tag plex-media-server timhaak/plexpass
+ExecStart=/usr/bin/docker run \
+  --rm -d --tag plex-media-server \
+  --envfile /opt/butterfinger/env/plexpass.env \
+  -h "$(/etc/hostname)" \
+  -v '/opt/butterfinger/config:/config' \
+  -v '/opt/butterfinger/data:/data' \
+  -p 80:32400 timhaak/plexpass
+
+[Install]
+WantedBy=multi-user.target
