@@ -1,18 +1,21 @@
 #!/bin/bash
 
-CONFIG_DIR='/opt/butterfinger/config'
-MOVIE_DIR='/opt/butterfinger/data'
-SERVICES_DIR='/opt/butterfinger/services'
-PLEX_ENV_FILE='/opt/butterfinger/env/plexpass.env'
+BASE_DIR='/opt/butterfinger'
+CONFIG_DIR="$BASE_DIR/config"
+MOVIE_DIR="$BASE_DIR/data"
+SERVICES_DIR="$BASE_DIR/services"
+PLEX_ENV_FILE="$BASE_DIR/env/plexpass.env"
 PLEX_SERVICE_NAME="plex-media-server"
 DOCKER_IMAGE='timhaak/plexpass'
 
 setup() {
   echo '* creating directories for plex'
+  sudo mkdir -p "$BASE_DIR"
   sudo mkdir -p "$CONFIG_DIR"
   sudo mkdir -p "$MOVIE_DIR"
   sudo mkdir -p "$(dirname "$PLEX_ENV_FILE")"
   sudo mkdir -p "$SERVICES_DIR"
+  sudo chmod -R 0775 "$BASE_DIR"
 }
 
 stop_if_needed() {
@@ -32,7 +35,7 @@ write_env() {
 download_service_file() {
   echo '* downloading plex service file'
   local repo='https://raw.githubusercontent.com/peterdemartini/butterfinger'
-  curl -sSL "${repo}/master/services/$PLEX_SERVICE_NAME.service?r=${RANDOM}" -o "$SERVICES_DIR/$PLEX_SERVICE_NAME.service" || return 1
+  sudo curl -sSL "${repo}/master/services/$PLEX_SERVICE_NAME.service?r=${RANDOM}" -o "$SERVICES_DIR/$PLEX_SERVICE_NAME.service" || return 1
   sudo systemctl enable "$SERVICES_DIR/$PLEX_SERVICE_NAME.service"
 }
 
