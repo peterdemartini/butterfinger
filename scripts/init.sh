@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SCRIPTS_DIR='/tmp/butterfinger-scripts'
+source ./base.sh
 
 create_scripts_dir() {
   echo "* creating butterfinger-scripts dir"
@@ -8,34 +8,42 @@ create_scripts_dir() {
   mkdir -p "$SCRIPTS_DIR"
 }
 
-download_script() {
-  local script="$1"
-  local repo="https://raw.githubusercontent.com/peterdemartini/butterfinger"
-  local file_path="${SCRIPTS_DIR}/${script}"
-  echo "* downloading $script"
-  rm "$file_path" &> /dev/null
-  curl -sSL "${repo}/master/scripts/${script}?r=${RANDOM}" -o "$file_path" || exit 1
-  chmod +x "$file_path"
+create_directories() {
+  echo '* creating directories'
+  sudo mkdir -p "$BASE_DIR"
+  sudo mkdir -p "$PROJECTS_DIR"
+  sudo mkdir -p "$PLEX_CONFIG_DIR"
+  sudo mkdir -p "$PLEX_DATA_DIR/.local-secure"
+  sudo mkdir -p "$PLEX_DATA_DIR/local-data"
+  sudo mkdir -p "$PLEX_DATA_DIR/.b2-secure"
+  sudo mkdir -p "$PLEX_DATA_DIR/b2-data"
+  sudo mkdir -p "$(dirname "$PLEX_ENV_FILE")"
+  sudo mkdir -p "$SERVICES_DIR"
+  sudo chmod -R 0775 "$BASE_DIR"
+  sudo chgrp -R butterfinger "$BASE_DIR"
 }
 
 run_script() {
   local script="$1"
   echo "* running script $script"
   local file_path="${SCRIPTS_DIR}/${script}"
-  "$file_path" || exit 1
+  "$file_path"
 }
 
 main() {
-  echo "* starting butterfinger setup"
+  echo "* running init.sh..."
   sudo touch /tmp/.enable-sudo-at-first && \
     create_scripts_dir && \
-    download_script "server.sh" && \
-    download_script "docker.sh" && \
-    download_script "plex.sh" && \
-    run_script "server.sh" && \
-    run_script "docker.sh" && \
+    create_directories && \
+    download_script 'server.sh' && \
+    download_script 'docker.sh' && \
+    download_script 'file-system.sh' && \
+    download_script 'plex.sh' && \
+    run_script 'server.sh' && \
+    run_script 'docker.sh' && \
+    run_script 'file-system.sh' && \
     run_script "plex.sh" && \
-    echo "* butterfinger setup done!" && \
+    echo '* done with init.sh' && \
     exit 0
 
   echo "* failed to run init.sh"

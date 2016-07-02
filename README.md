@@ -10,6 +10,9 @@ env \
   PLEX_PASSWORD='[plex-password]' \
   BUTTERFINGER_PASSWORD='[butterfinger-user-password]' \
   ROOT_PASSWORD='[root-user-password]' \
+  B2_APP_KEY='[b2-app-key]' \
+  B2_ACCOUNT_ID='[b2-account-id]' \
+  B2_BUCKET_ID='[b2-bucket-id]' \
   ./run-from-local.sh root '[hostname]'
 ```
 
@@ -21,5 +24,8 @@ env \
   PLEX_PASSWORD='[plex-password]' \
   BUTTERFINGER_PASSWORD='[butterfinger-user-password]' \
   ROOT_PASSWORD='[root-user-password]' \
+  B2_APP_KEY='[b2-app-key]' \
+  B2_ACCOUNT_ID='[b2-account-id]' \
+  B2_BUCKET_ID='[b2-bucket-id]' \
   ./run-from-local.sh user '[hostname]'
 ```

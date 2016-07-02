@@ -33,7 +33,7 @@ grant_permissions() {
 }
 
 main() {
-  echo '* running init-docker.sh...'
+  echo '* running docker.sh...'
 
   setup && \
     install_docker && \
@@ -41,7 +41,7 @@ main() {
     echo "* done." && \
     exit 0
 
-  echo '* failed to run init-docker.sh'
+  echo '* failed to run docker.sh'
   exit 1
 }
 
