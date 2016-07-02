@@ -14,7 +14,7 @@ download_script() {
   local file_path="${SCRIPTS_DIR}/${script}"
   echo "* downloading $script"
   rm "$file_path" &> /dev/null
-  curl -fsS "${repo}/master/${script}" -o "$file_path" || exit 1
+  curl -sSL "${repo}/master/scripts/${script}" -o "$file_path" || exit 1
   chmod +x "$file_path"
 }
 
@@ -29,12 +29,12 @@ main() {
   echo "* starting butterfinger setup"
   sudo touch /tmp/.enable-sudo-at-first && \
     create_scripts_dir && \
-    download_script "init-server.sh" && \
-    download_script "init-docker.sh" && \
-    download_script "init-plex.sh" && \
-    run_script "init-server.sh" && \
-    run_script "init-docker.sh" && \
-    run_script "init-plex.sh" && \
+    download_script "server.sh" && \
+    download_script "docker.sh" && \
+    download_script "plex.sh" && \
+    run_script "server.sh" && \
+    run_script "docker.sh" && \
+    run_script "plex.sh" && \
     echo "* butterfinger setup done!" && \
     exit 0
 
