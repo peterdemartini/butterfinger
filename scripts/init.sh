@@ -1,5 +1,8 @@
 #!/bin/bash
 
+download_and_source_base() {
+  curl -ssL "https://raw.githubusercontent.com/peterdemartini/butterfinger/master/scripts/base.sh?r=${RANDOM}" | source
+}
 
 create_scripts_dir() {
   echo "* creating butterfinger-scripts dir"
@@ -32,10 +35,9 @@ run_script() {
 main() {
   echo "* running init.sh..."
   sudo touch /tmp/.enable-sudo-at-first && \
+    download_and_source_base && \
     create_scripts_dir && \
     create_directories && \
-    download_script 'base.sh' && \
-    source ./base.sh && \
     download_script 'server.sh' && \
     download_script 'docker.sh' && \
     download_script 'file-system.sh' && \
