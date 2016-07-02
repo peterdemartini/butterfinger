@@ -14,7 +14,7 @@ download_script() {
   local file_path="${SCRIPTS_DIR}/${script}"
   echo "* downloading $script"
   rm "$file_path" &> /dev/null
-  curl -sSL "${repo}/master/scripts/${script}" -o "$file_path" || exit 1
+  curl -sSL "${repo}/master/scripts/${script}?r=$(random)" -o "$file_path" || exit 1
   chmod +x "$file_path"
 }
 
