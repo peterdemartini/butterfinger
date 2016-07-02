@@ -5,6 +5,12 @@ apt_update() {
   sudo apt-get update -y
 }
 
+prerequisites() {
+  echo "* installing prerequisites"
+  local img="$(uname -r)"
+  sudo apt-get install "linux-image-extra-${img}"
+}
+
 install_docker_deps() {
   echo "* install docker deps"
   sudo apt-get install -y apt-transport-https ca-certificates
@@ -38,13 +44,20 @@ give_permissions() {
   sudo usermod -aG docker "$(whoami)"
 }
 
+purge_it() {
+  echo "* purging old"
+  sudo apt-get purge lxc-docker
+}
+
 main() {
   echo "* running init-docker.sh..."
   apt_update && \
+    prerequisites && \
     install_docker_deps && \
     add_key && \
     add_to_sources && \
     apt_update && \
+    purge_it && \
     update_policy && \
     install_docker && \
     give_permissions && \

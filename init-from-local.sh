@@ -5,7 +5,9 @@ BUTTERFINGER_IDENTITY="$HOME/.ssh/butterfinger_id_rsa"
 ssh_to_server_as_root() {
   echo "* sshing to root"
   local hostname="$1"
-  ssh "root@$1" 'bash -s' < "./setup-user.sh"
+  echo "Run the following commands:"
+  cat "./setup-user.sh"
+  ssh "root@$1"
 }
 
 copy_key() {

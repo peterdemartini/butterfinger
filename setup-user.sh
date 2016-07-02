@@ -1,6 +1,6 @@
 #!/bin/bash
 
-adduser butterfinger --disabled-password --quiet
+adduser butterfinger
 usermod -aG sudo butterfinger
-cat /etc/sudoers | grep 'butterfinger' > /dev/null || exit 1
-echo 'butterfinger ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+(cat /etc/sudoers | grep 'butterfinger') || \
+  echo 'butterfinger ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
