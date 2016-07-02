@@ -1,4 +1,4 @@
-curl -s "https://raw.githubusercontent.com/peterdemartini/butterfinger/master/scripts/init.sh?r=$(random)" | env \
+curl -s "https://raw.githubusercontent.com/peterdemartini/butterfinger/master/scripts/init.sh?r=${RANDOM}" | env \
   PLEX_USERNAME='[username]' \
   PLEX_PASSWORD='[password]' \
   bash

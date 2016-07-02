@@ -11,7 +11,7 @@ ExecStartPre=-/usr/bin/docker rm -f plex-media-server
 ExecStartPre=/usr/bin/docker pull timhaak/plexpass:latest
 ExecStart=/usr/bin/docker run \
   --rm --name plex-media-server \
-  --envfile '/opt/butterfinger/env/plex-media-server.list' \
+  --env-file '/opt/butterfinger/env/plex-media-server.list' \
   -v '/opt/butterfinger/config:/config' \
   -v '/opt/butterfinger/data:/data' \
   -p 80:32400 timhaak/plexpass
