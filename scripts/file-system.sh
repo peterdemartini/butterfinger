@@ -28,6 +28,10 @@ mount_b2_fuse() {
 mount_encrypt_fs() {
   local name="$1"
   echo "* mount encryted $name"
+  if [ -d "$PLEX_DATA_DIR/${name}-data" ]; then
+    fusermount -u "$PLEX_DATA_DIR/${name}-data"
+    sudo -rf "$PLEX_DATA_DIR/.${name}-secure"
+  fi
   echo "$BUTTERFINGER_PASSWORD" | encfs -S "$PLEX_DATA_DIR/.${name}-secure" \
     "$PLEX_DATA_DIR/${name}-data" \
     -o nonempty
