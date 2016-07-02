@@ -42,10 +42,8 @@ mount_encrypt_fs() {
     fusermount -u "$folder_data"
     if [ "$?" != "0" ]; then
       sudo rm -rf "$folder_data"
-    else
-      create_fuse_folder "$folder_data"
     fi
-
+    create_fuse_folder "$folder_data"
   fi
   if [ -d "$folder_secure" ]; then
     echo "* removing fuse secure $name"
