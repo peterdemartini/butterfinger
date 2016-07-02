@@ -17,7 +17,7 @@ setup() {
 
 stop_if_needed() {
   echo '* stopping plex service if needed'
-  sudo systemctl stop "$PLEX_SERVICE_NAME" || exit 0
+  sudo systemctl stop "$PLEX_SERVICE_NAME" 2> /dev/null || return 0
 }
 
 write_env() {
