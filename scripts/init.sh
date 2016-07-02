@@ -1,7 +1,9 @@
 #!/bin/bash
 
 download_and_source_base() {
-  curl -ssL "https://raw.githubusercontent.com/peterdemartini/butterfinger/master/scripts/base.sh?r=${RANDOM}" | source
+  local file_path='/tmp/butterfinger-scripts/base.sh'
+  curl -ssL "https://raw.githubusercontent.com/peterdemartini/butterfinger/master/scripts/base.sh?r=${RANDOM}" -o "$file_path"
+  source "$file_path"
 }
 
 create_scripts_dir() {
