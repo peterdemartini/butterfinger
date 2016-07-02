@@ -43,7 +43,7 @@ mount_encrypt_fs() {
   echo '* mounting'
   echo "$BUTTERFINGER_PASSWORD" | encfs -S "$folder_secure" \
     "$folder_data" \
-    -o nonempty
+    -o nonempty || return 0
 }
 
 setup_local_data() {
