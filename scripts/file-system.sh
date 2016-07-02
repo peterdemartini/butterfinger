@@ -30,7 +30,7 @@ mount_encrypt_fs() {
   echo "* mount encryted $name"
   if [ -d "$PLEX_DATA_DIR/${name}-data" ]; then
     fusermount -u "$PLEX_DATA_DIR/${name}-data"
-    sudo -rf "$PLEX_DATA_DIR/.${name}-secure"
+    sudo rm -rf "$PLEX_DATA_DIR/.${name}-secure"
   fi
   echo "$BUTTERFINGER_PASSWORD" | encfs -S "$PLEX_DATA_DIR/.${name}-secure" \
     "$PLEX_DATA_DIR/${name}-data" \
