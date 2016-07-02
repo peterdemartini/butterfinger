@@ -33,6 +33,11 @@ install_docker() {
   sudo apt-get install -y docker-engine
 }
 
+give_permissions() {
+  echo "* give permissions to docker"
+  sudo usermod -aG docker "$(whoami)"
+}
+
 main() {
   echo "* running init-docker.sh..."
   apt_update && \
@@ -42,6 +47,7 @@ main() {
     apt_update && \
     update_policy && \
     install_docker && \
+    give_permissions && \
     echo "* done." && \
     exit 0
 
