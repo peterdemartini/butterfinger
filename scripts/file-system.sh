@@ -7,8 +7,10 @@ fi
 B2_FUSE_DIR="$PROJECTS_DIR/b2_fuse"
 
 install_encfs() {
-  echo '* install encfs'
-  sudo apt-get -y install encfs
+  if [ -z "$(which encfs)" ]; then
+    echo '* installing encfs'
+    sudo apt-get -y install encfs
+  fi
 }
 
 download_b2_fuse(){
@@ -47,7 +49,7 @@ mount_encrypt_fs() {
   fi
   echo '* mounting'
 
-  (echo "$BUTTERFINGER_PASSWORD" | env ENCFS6_CONFIG="$config_path" \
+  (cat "$CONFIG_DIR/encfs-passwd" | env ENCFS6_CONFIG="$config_path" \
     encfs -S "$folder_secure" \
     "$folder_data" \
     -o nonempty) || return 0
@@ -65,6 +67,11 @@ setup_b2_data() {
     cp "$PLEX_DATA_DIR/.b2-secure/.encfs6.xml" "$ENCFS_B2_CONFIG_FILE"
 }
 
+write_encfs_password() {
+  echo '* writing encfs password'
+  echo "$BUTTERFINGER_PASSWORD" | tee $CONFIG_DIR/encfs-passwd
+}
+
 write_b2_fuse_config(){
   echo '* writing b2_fuse config'
   local file_path="$B2_FUSE_DIR/config.yaml"
@@ -76,6 +83,7 @@ write_b2_fuse_config(){
 main() {
   echo '* running file-system.sh...'
   install_encfs && \
+    write_encfs_password && \
     setup_local_data && \
     setup_b2_data && \
     download_b2_fuse && \
