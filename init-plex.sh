@@ -35,11 +35,11 @@ run_it() {
 }
 
 write_env() {
-  sudo echo "* writing env for plex"
-  sudo echo "SKIP_CHOWN_CONFIG=false" > "$PLEX_ENV_FILE"
-  sudo echo "PLEX_USERNAME=$PLEX_USERNAME" >> "$PLEX_ENV_FILE"
-  sudo echo "PLEX_PASSWORD=$PLEX_PASSWORD" >> "$PLEX_ENV_FILE"
-  sudo echo "PLEX_EXTERNALPORT=80" >> "$PLEX_ENV_FILE"
+  echo "* writing env for plex"
+  echo "SKIP_CHOWN_CONFIG=false" | sudo tee "$PLEX_ENV_FILE"
+  echo "PLEX_USERNAME=$PLEX_USERNAME" | sudo tee --append  "$PLEX_ENV_FILE"
+  echo "PLEX_PASSWORD=$PLEX_PASSWORD" | sudo tee --append  "$PLEX_ENV_FILE"
+  echo "PLEX_EXTERNALPORT=80" | sudo tee --append  "$PLEX_ENV_FILE"
   # echo "PLEX_TOKEN=" >> "$PLEX_ENV_FILE"
 }
 
