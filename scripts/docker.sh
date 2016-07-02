@@ -11,7 +11,11 @@ remove_docker() {
 }
 
 setup() {
-  sudo dmsetup mknodes
+  if [ -z "$(which dmsetup)" ]; then
+    echo '* installing dmsetup'
+    sudo apt-get install dmsetup -y
+    sudo dmsetup mknodes
+  fi
 }
 
 install_docker() {
