@@ -32,7 +32,7 @@ write_env() {
 download_service_file() {
   echo '* downloading plex service file'
   local repo='https://raw.githubusercontent.com/peterdemartini/butterfinger'
-  curl -sSL "${repo}/master/services/$PLEX_SERVICE_NAME.service?r=$(random)" -o "$SERVICES_DIR/$PLEX_SERVICE_NAME.service" || return 1
+  curl -sSL "${repo}/master/services/$PLEX_SERVICE_NAME.service?r=${RANDOM}" -o "$SERVICES_DIR/$PLEX_SERVICE_NAME.service" || return 1
   sudo systemctl enable "$SERVICES_DIR/$PLEX_SERVICE_NAME.service"
 }
 
