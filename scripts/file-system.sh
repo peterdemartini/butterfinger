@@ -88,7 +88,7 @@ setup_local_data() {
   fi
 
   mount_encrypt_fs 'local' "$config_path" && \
-    cp "$PLEX_DATA_DIR/.local-secure/.encfs6.xml" "$ENCFS_LOCAL_CONFIG_FILE"
+    mv "$PLEX_DATA_DIR/.local-secure/.encfs6.xml" "$ENCFS_LOCAL_CONFIG_FILE"
 }
 
 setup_b2_data() {
