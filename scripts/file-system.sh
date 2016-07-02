@@ -27,13 +27,22 @@ mount_b2_fuse() {
 
 mount_encrypt_fs() {
   local name="$1"
+  local folder_data="$PLEX_DATA_DIR/${name}-data"
+  local folder_secure="$PLEX_DATA_DIR/.${name}-secure"
   echo "* mount encryted $name"
-  if [ -d "$PLEX_DATA_DIR/${name}-data" ]; then
-    fusermount -u "$PLEX_DATA_DIR/${name}-data"
-    sudo rm -rf "$PLEX_DATA_DIR/.${name}-secure"
+  if [ -d "$folder_data" ]; then
+    echo "* unmounting fuse unsecure $name"
+    fusermount -u "$folder_data"
+    create_fuse_folder "$folder_data"
   fi
-  echo "$BUTTERFINGER_PASSWORD" | encfs -S "$PLEX_DATA_DIR/.${name}-secure" \
-    "$PLEX_DATA_DIR/${name}-data" \
+  if [ -d "$folder_secure" ]; then
+    echo "* removing fuse secure $name"
+    sudo rm -rf "$folder_secure"
+    create_fuse_folder "$folder_secure"
+  fi
+  echo '* mounting'
+  echo "$BUTTERFINGER_PASSWORD" | encfs -S "$folder_secure" \
+    "$folder_data" \
     -o nonempty
 }
 

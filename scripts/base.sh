@@ -38,8 +38,8 @@ create_dir() {
 
 create_fuse_folder() {
   local folder="$1"
-  echo "* create fuse folder $1"
   if [ ! -d "$folder" ]; then
+    echo "* create fuse folder $1"
     create_dir "$folder"
   fi
 }
