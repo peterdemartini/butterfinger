@@ -27,8 +27,12 @@ download_b2_fuse(){
 
 install_fusepy() {
   echo '* install fusepy'
-  sudo apt-get install -y python-yaml python-pip || return 1
-  sudo python -m pip install fusepy || return 1
+  pushd "$B2_FUSE_DIR"
+    sudo apt-get install -y python-yaml python-pip || return 1
+    if [ -z "$(which fusepy)" ]; then
+      sudo python -m pip install fusepy || return 1
+    fi
+  popd
 }
 
 mount_b2_fuse() {
