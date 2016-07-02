@@ -52,7 +52,7 @@ setup_local_data() {
     env ENCFS6_CONFIG="$ENCFS_LOCAL_CONFIG_FILE" mount_encrypt_fs 'local'
   else
     mount_encrypt_fs 'local'
-    cp "$PLEX_DATA_DIR/.local-data/.encfs6.xml" "$ENCFS_LOCAL_CONFIG_FILE"
+    cp "$PLEX_DATA_DIR/local-data/.encfs6.xml" "$ENCFS_LOCAL_CONFIG_FILE"
   fi
 }
 
@@ -62,7 +62,7 @@ setup_b2_data() {
     env ENCFS6_CONFIG="$ENCFS_B2_CONFIG_FILE" mount_encrypt_fs 'b2'
   else
     mount_encrypt_fs 'b2'
-    cp "$PLEX_DATA_DIR/.b2-data/.encfs6.xml" "$ENCFS_B2_CONFIG_FILE"
+    cp "$PLEX_DATA_DIR/b2-data/.encfs6.xml" "$ENCFS_B2_CONFIG_FILE"
   fi
 }
 
