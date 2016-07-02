@@ -14,8 +14,15 @@ install_encfs() {
 }
 
 download_b2_fuse(){
-  echo '* download b2_fuse'
-  git clone https://github.com/sondree/b2_fuse.git "$B2_FUSE_DIR"
+  if [ -f "$B2_FUSE_DIR" ]; then
+    echo '* updating b2_fuse'
+    pushd "$B2_FUSE_DIR"
+      git pull
+    popd
+  else
+    echo '* download b2_fuse'
+    git clone https://github.com/sondree/b2_fuse.git "$B2_FUSE_DIR"
+  fi
 }
 
 install_fusepy() {
