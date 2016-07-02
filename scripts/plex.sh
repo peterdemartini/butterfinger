@@ -8,7 +8,7 @@ PLEX_SERVICE_NAME="plex-media-server"
 DOCKER_IMAGE='timhaak/plexpass'
 
 setup() {
-  echo '* plex setup'
+  echo '* creating directories for plex'
   sudo mkdir -p "$CONFIG_DIR"
   sudo mkdir -p "$MOVIE_DIR"
   sudo mkdir -p "$(dirname "$PLEX_ENV_FILE")"
