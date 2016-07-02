@@ -10,6 +10,10 @@ remove_docker() {
   sudo apt-get remove --auto-remove docker
 }
 
+setup() {
+  sudo dmsetup mknodes
+}
+
 install_docker() {
   echo '* installing docker'
   curl -sSL https://get.docker.com/ | sh
@@ -34,7 +38,8 @@ main() {
     fi
   fi
 
-  install_docker && \
+  setup && \
+    install_docker && \
     grant_permissions && \
     echo "* done." && \
     exit 0

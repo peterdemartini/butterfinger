@@ -6,3 +6,6 @@ usermod -aG sudo butterfinger
 cat /etc/sudoers | grep 'butterfinger ALL=(ALL) NOPASSWD: ALL' > /dev/null \
   && echo 'user exists' || \
   echo 'butterfinger ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+cat '/etc/ssh/sshd_config' | grep 'PermitRootLogin' && sed -i .bk -e 's/.*PermitRootLogin.*/PermitRootLogin no/' '/etc/ssh/sshd_config'
+cat '/etc/ssh/sshd_config' | grep 'PasswordAuthentication' && sed -i .bk -e 's/.*PasswordAuthentication.*/PasswordAuthentication no/' '/etc/ssh/sshd_config'
+systemctl reload sshd
