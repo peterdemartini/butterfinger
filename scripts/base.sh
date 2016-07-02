@@ -27,3 +27,19 @@ download_script(){
   curl -sSL "${SCRIPT_BASE_URI}/master/scripts/${script}?r=${RANDOM}" -o "$file_path" || exit 1
   chmod +x "$file_path"
 }
+
+create_dir() {
+  local folder="$1"
+  echo "* create folder $1"
+  sudo mkdir -p "$folder"
+  sudo chmod -R 0775 "$folder"
+  sudo chgrp -R butterfinger "$folder"
+}
+
+create_fuse_folder() {
+  local folder="$1"
+  echo "* create fuse folder $1"
+  if [ ! -d "$folder" ]; then
+    create_dir "$folder"
+  fi
+}

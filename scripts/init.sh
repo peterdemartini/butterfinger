@@ -15,17 +15,14 @@ create_scripts_dir() {
 
 create_directories() {
   echo '* creating directories'
-  sudo mkdir -p "$BASE_DIR"
-  sudo mkdir -p "$PROJECTS_DIR"
-  sudo mkdir -p "$PLEX_CONFIG_DIR"
-  sudo mkdir -p "$PLEX_DATA_DIR/.local-secure"
-  sudo mkdir -p "$PLEX_DATA_DIR/local-data"
-  sudo mkdir -p "$PLEX_DATA_DIR/.b2-secure"
-  sudo mkdir -p "$PLEX_DATA_DIR/b2-data"
-  sudo mkdir -p "$(dirname "$PLEX_ENV_FILE")"
-  sudo mkdir -p "$SERVICES_DIR"
-  sudo chmod -R 0775 "$BASE_DIR"
-  sudo chgrp -R butterfinger "$BASE_DIR"
+  create_dir "$PROJECTS_DIR"
+  create_dir "$SERVICES_DIR"
+  create_dir "$PLEX_CONFIG_DIR"
+  create_dir "$CONFIG_DIR"
+  create_fuse_folder "$PLEX_DATA_DIR/.local-secure"
+  create_fuse_folder "$PLEX_DATA_DIR/local-data"
+  create_fuse_folder "$PLEX_DATA_DIR/.b2-secure"
+  create_fuse_folder "$PLEX_DATA_DIR/b2-data"
 }
 
 run_script() {
