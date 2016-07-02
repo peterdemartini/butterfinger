@@ -24,21 +24,55 @@ ssh_to_server_as_butterfinger() {
   ssh "butterfinger@$hostname" 'bash -s' < "./start-init.local.sh"
 }
 
+usage() {
+  local notice="$1"
+  echo "./init-from-local.sh <subcommand> <hostname>"
+  echo ""
+  echo "subcommands:"
+  echo "   init"
+  echo "       - assuming butterfinger user is setup, it will auth as it"
+  echo "   init-root"
+  echo "       - first create butterfinger user"
+  echo ""
+  if [ "$notice" != "" ]; then
+    echo "$notice"
+    echo ""
+  fi
+}
+
 main() {
-  local hostname="$1"
+  local cmd="$1"
+  local hostname="$2"
+
+  if [ -z "$cmd" ]; then
+    usage 'Missing command argument'
+    exit 1
+  fi
+
+  if [ "$cmd" != 'init-root' ] && [ "$cmd" != "init" ]; then
+    usage 'Command must be either "init-root" or "init"'
+    exit 1
+  fi
+
   if [ -z "$hostname" ]; then
-    echo "Missing hostname argument"
+    usage 'Missing hostname argument'
     exit 1
   fi
+
   if [ ! -f "$BUTTERFINGER_IDENTITY" ]; then
-    echo "You are missing the butterfinger identity"
+    usage 'You are missing the butterfinger identity'
     exit 1
   fi
+
   echo "* setting up locally"
-  ssh_to_server_as_butterfinger "$hostname"
-  ssh_to_server_as_root "$hostname"
-  add_key "$hostname"
-  ssh_to_server_as_butterfinger "$hostname"
+  if [ "$cmd" == "init" ]; then
+    ssh_to_server_as_butterfinger "$hostname"
+  fi
+  if [ "$cmd" == "init-root" ]; then
+    ssh_to_server_as_root "$hostname"
+    add_key "$hostname"
+    ssh_to_server_as_butterfinger "$hostname"
+  fi
   echo "* done."
 }
 
