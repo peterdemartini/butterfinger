@@ -31,6 +31,7 @@ mount_b2_fuse() {
 
 mount_encrypt_fs() {
   local name="$1"
+  local config_path="$2"
   local folder_data="$PLEX_DATA_DIR/${name}-data"
   local folder_secure="$PLEX_DATA_DIR/.${name}-secure"
   echo "* mount encryted $name"
@@ -45,29 +46,23 @@ mount_encrypt_fs() {
     create_fuse_folder "$folder_secure"
   fi
   echo '* mounting'
-  echo "$BUTTERFINGER_PASSWORD" | encfs -S "$folder_secure" \
+
+  (echo "$BUTTERFINGER_PASSWORD" | env ENCFS6_CONFIG="$config_path" \
+    encfs -S "$folder_secure" \
     "$folder_data" \
-    -o nonempty || return 0
+    -o nonempty) || return 0
 }
 
 setup_local_data() {
   echo '* setting up local data'
-  if [ -f "$ENCFS_LOCAL_CONFIG_FILE" ]; then
-    env ENCFS6_CONFIG="$ENCFS_LOCAL_CONFIG_FILE" mount_encrypt_fs 'local'
-  else
-    mount_encrypt_fs 'local'
+  mount_encrypt_fs 'local' "$ENCFS_LOCAL_CONFIG_FILE" && \
     cp "$PLEX_DATA_DIR/.local-secure/.encfs6.xml" "$ENCFS_LOCAL_CONFIG_FILE"
-  fi
 }
 
 setup_b2_data() {
   echo '* setting up b2 data'
-  if [ -f "$ENCFS_B2_CONFIG_FILE" ]; then
-    env ENCFS6_CONFIG="$ENCFS_B2_CONFIG_FILE" mount_encrypt_fs 'b2'
-  else
-    mount_encrypt_fs 'b2'
+  mount_encrypt_fs 'b2' "$ENCFS_B2_CONFIG_FILE" && \
     cp "$PLEX_DATA_DIR/.b2-secure/.encfs6.xml" "$ENCFS_B2_CONFIG_FILE"
-  fi
 }
 
 write_b2_fuse_config(){
