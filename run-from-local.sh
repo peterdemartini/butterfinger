@@ -5,18 +5,23 @@ BUTTERFINGER_IDENTITY="$HOME/.ssh/butterfinger_id_rsa"
 ssh_to_server_as_root() {
   echo '* sshing to root'
   local hostname="$1"
-  if [ ! -z "$ROOT_PASSWORD" ]; then
-    echo "* this is the root password $ROOT_PASSWORD"
-    printf "$ROOT_PASSWORD" | pbcopy
-    echo "* it has been copied"
-  fi
   ssh "root@$hostname" 'bash -s' < './generated/setup-as-root.sh'
 }
 
 copy_key() {
-  echo '* copying key to server'
-  local hostname="$1"
-  ssh-copy-id -i "$BUTTERFINGER_IDENTITY" butterfinger@"$hostname"  > /dev/null
+  local user="$1"
+  local hostname="$2"
+  echo "* copying key to server for $user"
+  ssh-copy-id -i "$BUTTERFINGER_IDENTITY" "$user"@"$hostname" > /dev/null
+}
+
+copy_password() {
+  local password="$1"
+  if [ -z "$password" ]; then
+    return 0
+  fi
+  echo "* copying password $password"
+  printf "$BUTTERFINGER_PASSWORD" | pbcopy
 }
 
 add_key() {
@@ -27,11 +32,6 @@ add_key() {
 ssh_to_server_as_butterfinger() {
   echo '* ssh into butterfinger'
   local hostname="$1"
-  if [ ! -z "$BUTTERFINGER_PASSWORD" ]; then
-    echo "* this is the butterfinger password $BUTTERFINGER_PASSWORD"
-    printf "$BUTTERFINGER_PASSWORD" | pbcopy
-    echo "* it has been copied"
-  fi
   ssh "butterfinger@$hostname" 'bash -s' < './generated/install-it.sh'
 }
 
@@ -91,6 +91,17 @@ replace_in_generated() {
   return 0
 }
 
+remove_from_known_hosts(){
+  echo "* removing from known_hosts"
+  local hostname="$1"
+  local hostname="$(echo "$1" | sed -e 's/[\/&]/\\&/g')"
+  local file="$HOME/.ssh/known_hosts"
+  sed -i .bk -e "s/^$hostname.*//" "$file"
+  if [ -f "$file.bk" ]; then
+    rm "$file.bk"
+  fi
+}
+
 main() {
   local cmd="$1"
   local hostname="$2"
@@ -132,22 +143,30 @@ main() {
   fi
 
   echo '* setting up locally'
+
+  add_key
+
   if [ "$cmd" == "user" ]; then
     echo '* running user command'
     ssh_to_server_as_butterfinger "$hostname"
     echo '* done'
     echo 0
   fi
+
   if [ "$cmd" == "root" ]; then
     echo '* running root command'
-    ssh_to_server_as_root "$hostname" && \
-      add_key "$hostname" && \
-      ssh_to_server_as_butterfinger "$hostname"
-    echo '* done.'
-    exit 0
+    remove_from_known_hosts "$hostname" && \
+      copy_password "$ROOT_PASSWORD" && \
+      copy_key 'root' "$hostname" && \
+      ssh_to_server_as_root "$hostname" && \
+      copy_password "$BUTTERFINGER_PASSWORD" && \
+      copy_key 'butterfinger' "$hostname" && \
+      ssh_to_server_as_butterfinger "$hostname" && \
+      echo '* done.' && \
+      exit 0
   fi
-  usage 'Command must be either "user" or "root"'
-  exit 1
+  echo 'Failed to run command'
+  exit 0
 }
 
 main "$@"
