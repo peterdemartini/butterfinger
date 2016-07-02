@@ -13,7 +13,7 @@ download_script() {
   local script="$1"
   local repo="https://raw.githubusercontent.com/peterdemartini/butterfinger"
   local file_path="${SCRIPTS_DIR}/${script}"
-  rm "$file_path" 2>&1 /dev/null
+  rm "$file_path" &> /dev/null
   curl -fsS "${repo}/master/${script}" -o "$file_path" || exit 1
   chmod +x "$file_path"
 }
