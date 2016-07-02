@@ -19,7 +19,7 @@ add_to_sources() {
   echo "* add docker to sources"
   local value="deb https://apt.dockerproject.org/repo ubuntu-xenial main"
   local file="/etc/apt/sources.list.d/docker.list"
-  (cat "$file" | grep "$value") && \
+  (cat "$file" | grep "$value") || \
     (echo "$value" | sudo tee "$file")
 }
 
