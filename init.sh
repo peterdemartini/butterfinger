@@ -34,8 +34,12 @@ main() {
     download_script "init-plex.sh" && \
     run_script "init-server.sh" && \
     run_script "init-docker.sh" && \
-    run_script "init-plex.sh"
-  echo "* butterfinger setup done!"
+    run_script "init-plex.sh" && \
+    echo "* butterfinger setup done!" && \
+    exit 0
+
+  echo "* failed to run init.sh"
+  exit 1
 }
 
 main "$@"

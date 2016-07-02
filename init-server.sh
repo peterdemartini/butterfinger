@@ -13,8 +13,12 @@ install_git() {
 main() {
   echo "* running init-server.sh..."
   apt_update && \
-    install_git
-  echo "* done."
+    install_git && \
+    echo "* done." && \
+    exit 0
+
+  echo "* failed to run init-server.sh"
+  exit 1
 }
 
 main "$@"

@@ -35,11 +35,11 @@ run_it() {
 }
 
 write_env() {
-  echo "* writing env for plex"
-  echo "SKIP_CHOWN_CONFIG=false" > "$PLEX_ENV_FILE"
-  echo "PLEX_USERNAME=$PLEX_USERNAME" >> "$PLEX_ENV_FILE"
-  echo "PLEX_PASSWORD=$PLEX_PASSWORD" >> "$PLEX_ENV_FILE"
-  echo "PLEX_EXTERNALPORT=80" >> "$PLEX_ENV_FILE"
+  sudo echo "* writing env for plex"
+  sudo echo "SKIP_CHOWN_CONFIG=false" > "$PLEX_ENV_FILE"
+  sudo echo "PLEX_USERNAME=$PLEX_USERNAME" >> "$PLEX_ENV_FILE"
+  sudo echo "PLEX_PASSWORD=$PLEX_PASSWORD" >> "$PLEX_ENV_FILE"
+  sudo echo "PLEX_EXTERNALPORT=80" >> "$PLEX_ENV_FILE"
   # echo "PLEX_TOKEN=" >> "$PLEX_ENV_FILE"
 }
 
@@ -54,11 +54,15 @@ main() {
     exit 1
   fi
   setup && \
-    sudo write_env && \
+    write_env && \
     get_docker_image && \
     preclean && \
-    run_it
-  echo "* done."
+    run_it && \
+    echo "* done." && \
+    exit 0
+
+  echo "* failed to run init-plex.sh"
+  exit 1
 }
 
 main "$@"

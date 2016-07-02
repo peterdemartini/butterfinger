@@ -41,8 +41,12 @@ main() {
     add_to_sources && \
     apt_update && \
     update_policy && \
-    install_docker
-  echo "* done"
+    install_docker && \
+    echo "* done." && \
+    exit 0
+
+  echo "* failed to run init-docker.sh"
+  exit 1
 }
 
 main "$@"
