@@ -12,8 +12,8 @@ install_git() {
 
 main() {
   echo "* running init-server.sh..."
-  apt_update || exit 1
-  install_git || exit 1
+  apt_update && \
+    install_git
   echo "* done."
 }
 

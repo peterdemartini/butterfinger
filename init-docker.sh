@@ -17,7 +17,10 @@ add_key() {
 
 add_to_sources() {
   echo "* add docker to sources"
-  echo "deb https://apt.dockerproject.org/repo ubuntu-xenial main" | sudo tee /etc/apt/sources.list.d/docker.list
+  local value="deb https://apt.dockerproject.org/repo ubuntu-xenial main"
+  local file="/etc/apt/sources.list.d/docker.list"
+  (cat "$file" | grep "$value") && \
+    (echo "$value" | sudo tee "$file")
 }
 
 update_policy() {
@@ -32,13 +35,13 @@ install_docker() {
 
 main() {
   echo "* running init-docker.sh..."
-  apt_update || exit 1
-  install_docker_deps || exit 1
-  add_key || exit 1
-  add_to_sources || exit 1
-  apt_update || exit 1
-  update_policy || exit 1
-  install_docker || exit 1
+  apt_update && \
+    install_docker_deps && \
+    add_key && \
+    add_to_sources && \
+    apt_update && \
+    update_policy && \
+    install_docker
   echo "* done"
 }
 

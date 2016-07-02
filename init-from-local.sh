@@ -69,9 +69,9 @@ main() {
     ssh_to_server_as_butterfinger "$hostname"
   fi
   if [ "$cmd" == "init-root" ]; then
-    ssh_to_server_as_root "$hostname"
-    add_key "$hostname"
-    ssh_to_server_as_butterfinger "$hostname"
+    ssh_to_server_as_root "$hostname" && \
+      add_key "$hostname" && \
+      ssh_to_server_as_butterfinger "$hostname"
   fi
   echo "* done."
 }

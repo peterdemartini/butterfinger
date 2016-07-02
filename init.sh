@@ -27,14 +27,14 @@ run_script() {
 
 main() {
   echo "* starting butterfinger setup"
-  sudo touch /tmp/.enable-sudo-at-first
-  create_scripts_dir || exit 1
-  download_script "init-server.sh" || exit 1
-  download_script "init-docker.sh" || exit 1
-  download_script "init-plex.sh" || exit 1
-  run_script "init-server.sh" || exit 1
-  run_script "init-docker.sh" || exit 1
-  run_script "init-plex.sh" || exit 1
+  sudo touch /tmp/.enable-sudo-at-first && \
+    create_scripts_dir && \
+    download_script "init-server.sh" && \
+    download_script "init-docker.sh" && \
+    download_script "init-plex.sh" && \
+    run_script "init-server.sh" && \
+    run_script "init-docker.sh" && \
+    run_script "init-plex.sh"
   echo "* butterfinger setup done!"
 }
 
