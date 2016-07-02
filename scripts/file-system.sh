@@ -21,29 +21,35 @@ install_fusepy() {
 }
 
 mount_b2_fuse() {
+  echo '* mount b2 fuse'
   python "$B2_FUSE_DIR/b2fuse.py" "$PLEX_DATA_DIR/.b2-secure"
 }
 
 mount_encrypt_fs() {
   local name="$1"
-  encfs "$PLEX_DATA_DIR/.${name}-secure" "$PLEX_DATA_DIR/${name}-data"
+  echo "* mount encryted $name"
+  echo "$BUTTERFINGER_PASSWORD" | encfs -S "$PLEX_DATA_DIR/.${name}-secure" \
+    "$PLEX_DATA_DIR/${name}-data" \
+    -o nonempty
 }
 
 setup_local_data() {
+  echo '* setting up local data'
   if [ -f "$ENCFS_LOCAL_CONFIG_FILE" ]; then
     env ENCFS6_CONFIG="$ENCFS_LOCAL_CONFIG_FILE" mount_encrypt_fs 'local'
   else
     mount_encrypt_fs 'local'
-    cp "$PLEX_DATA_DIR/.b2-secure/encfs.xml" "$ENCFS_LOCAL_CONFIG_FILE"
+    cp "$PLEX_DATA_DIR/.b2-secure/.encfs6.xml" "$ENCFS_LOCAL_CONFIG_FILE"
   fi
 }
 
 setup_b2_data() {
+  echo '* setting up b2 data'
   if [ -f "$ENCFS_B2_CONFIG_FILE" ]; then
     env ENCFS6_CONFIG="$ENCFS_B2_CONFIG_FILE" mount_encrypt_fs 'b2'
   else
     mount_encrypt_fs 'b2'
-    cp "$PLEX_DATA_DIR/.b2-secure/encfs.xml" "$ENCFS_B2_CONFIG_FILE"
+    cp "$PLEX_DATA_DIR/.b2-secure/.encfs6.xml" "$ENCFS_B2_CONFIG_FILE"
   fi
 }
 
