@@ -5,25 +5,34 @@ BUTTERFINGER_IDENTITY="$HOME/.ssh/butterfinger_id_rsa"
 ssh_to_server_as_root() {
   echo '* sshing to root'
   local hostname="$1"
-  echo 'Run the following commands:'
-  ssh "root@$hostname" | 'bash -si' < './generated/setup-as-root.sh'
+  if [ ! -z "$ROOT_PASSWORD" ]; then
+    echo "* this is the root password $ROOT_PASSWORD"
+    printf "$ROOT_PASSWORD" | pbcopy
+    echo "* it has been copied"
+  fi
+  ssh "root@$hostname" 'bash -s' < './generated/setup-as-root.sh'
 }
 
 copy_key() {
   echo '* copying key to server'
   local hostname="$1"
-  ssh-copy-id -i "$BUTTERFINGER_IDENTITY" butterfinger@"$hostname"
+  ssh-copy-id -i "$BUTTERFINGER_IDENTITY" butterfinger@"$hostname"  > /dev/null
 }
 
 add_key() {
   echo '* adding key'
-  ssh-add "$BUTTERFINGER_IDENTITY"
+  ssh-add "$BUTTERFINGER_IDENTITY" > /dev/null
 }
 
 ssh_to_server_as_butterfinger() {
   echo '* ssh into butterfinger'
   local hostname="$1"
-  ssh "butterfinger@$hostname" 'bash -si' < './generated/install-it.sh'
+  if [ ! -z "$BUTTERFINGER_PASSWORD" ]; then
+    echo "* this is the butterfinger password $BUTTERFINGER_PASSWORD"
+    printf "$BUTTERFINGER_PASSWORD" | pbcopy
+    echo "* it has been copied"
+  fi
+  ssh "butterfinger@$hostname" 'bash -s' < './generated/install-it.sh'
 }
 
 usage() {
@@ -49,14 +58,14 @@ usage() {
 generate_install_it() {
   echo '* generate install-it.sh'
   copy_template 'install-it.sh' && \
-    replace_in_generated 'install-it.sh' '[username]' "$PLEX_USERNAME" && \
-    replace_in_generated 'install-it.sh' '[password]' "$PLEX_PASSWORD"
+    replace_in_generated 'install-it.sh' 'username' "$PLEX_USERNAME" && \
+    replace_in_generated 'install-it.sh' 'password' "$PLEX_PASSWORD"
 }
 
 generate_setup_as_root(){
   echo '* generate setup-as-root.sh'
   copy_template 'setup-as-root.sh' && \
-    replace_in_generated 'setup-as-root.sh' '[password]' "$BUTTERFINGER_PASSWORD"
+    replace_in_generated 'setup-as-root.sh' 'password' "$BUTTERFINGER_PASSWORD"
 }
 
 copy_template() {
@@ -89,9 +98,6 @@ main() {
   if [ -z "$cmd" ]; then
     usage 'Missing command argument'
     exit 1
-  fi
-
-  if [ "$cmd" != 'root' ] && [ "$cmd" != 'user' ]; then
   fi
 
   if [ -z "$hostname" ]; then

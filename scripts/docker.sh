@@ -22,7 +22,7 @@ grant_permissions() {
 
 main() {
   echo '* running init-docker.sh...'
-  if [ -z "$(which docker)" ]; then
+  if [ ! -z "$(which docker)" ]; then
     echo '* docker already installed'
     check_daemon
     if [ "$?" != "0" ]; then
