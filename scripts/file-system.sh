@@ -32,7 +32,7 @@ install_fusepy() {
 
     if [ ! -z "$(which pip)" ]; then
       echo '* updating pip'
-      pip install --upgrade pip
+      sudo pip install --upgrade pip
     else
       echo '* installing pip'
       sudo apt-get install -y python-pip || return 1
