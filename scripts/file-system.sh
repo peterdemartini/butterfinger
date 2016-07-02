@@ -53,7 +53,7 @@ mount_encrypt_fs() {
   fi
 
   echo "* mounting $name : $config_path"
-  (cat "$CONFIG_DIR/encfs-passwd" | env ENCFS6_CONFIG="$config_path" \
+  (cat "$CONFIG_DIR/encfs-passwd" | \
     encfs -S "$folder_secure" \
     "$folder_data" \
     -o nonempty) || return 0
