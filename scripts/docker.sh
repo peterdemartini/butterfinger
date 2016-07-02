@@ -19,6 +19,10 @@ setup() {
 }
 
 install_docker() {
+  if [ ! -z "$(which docker)" ]; then
+    echo '* docker already installed'
+    return 0
+  fi
   echo '* installing docker'
   curl -sSL https://get.docker.com/ | sh
 }
@@ -30,17 +34,6 @@ grant_permissions() {
 
 main() {
   echo '* running init-docker.sh...'
-  if [ ! -z "$(which docker)" ]; then
-    echo '* docker already installed'
-    check_daemon
-    if [ "$?" != "0" ]; then
-      echo '* cannot connector docker daemon'
-      remove_docker
-    else
-      echo '* done.'
-      exit 0
-    fi
-  fi
 
   setup && \
     install_docker && \
