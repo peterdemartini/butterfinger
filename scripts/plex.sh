@@ -20,7 +20,7 @@ write_env() {
 }
 
 download_service_file() {
-  download_file "services/$PLEX_SERVICE_NAME.service"
+  download_file 'services' "$PLEX_SERVICE_NAME.service" "$SERVICES_DIR"
 }
 
 enable_service() {

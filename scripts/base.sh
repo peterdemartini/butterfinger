@@ -14,9 +14,11 @@ export SCRIPT_BASE_URI='https://raw.githubusercontent.com/peterdemartini/butterf
 export SCRIPTS_DIR='/tmp/butterfinger-scripts'
 
 download_file() {
-  echo '* downloading service file'
-  local file_path="$1"
-  curl -sSL "${SCRIPT_BASE_URI}/master/${file_path}?r=${RANDOM}" -o "$file_path" || return 1
+  echo '* downloading file'
+  local from_folder="$1"
+  local file="$2"
+  local to_dir="$3"
+  curl -sSL "${SCRIPT_BASE_URI}/master/${from_folder}/${file}?r=${RANDOM}" -o "$to_dir/$file" || return 1
 }
 
 download_script(){
@@ -24,7 +26,7 @@ download_script(){
   local file_path="${SCRIPTS_DIR}/${script}"
   echo "* downloading $script"
   rm "$file_path" &> /dev/null
-  curl -sSL "${SCRIPT_BASE_URI}/master/scripts/${script}?r=${RANDOM}" -o "$file_path" || exit 1
+  download_file 'scripts' "$script" "$SCRIPTS_DIR"
   chmod +x "$file_path"
 }
 
