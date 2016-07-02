@@ -57,14 +57,23 @@ mount_encrypt_fs() {
 
 setup_local_data() {
   echo '* setting up local data'
+  local config_path=""
+  if [ ! -f "$ENCFS_LOCAL_CONFIG_FILE" ]; then
+    config_path="$ENCFS_LOCAL_CONFIG_FILE"
+  fi
+
   mount_encrypt_fs 'local' "$ENCFS_LOCAL_CONFIG_FILE" && \
-    cp "$PLEX_DATA_DIR/.local-secure/.encfs6.xml" "$ENCFS_LOCAL_CONFIG_FILE"
+    cp "$PLEX_DATA_DIR/.local-secure/.encfs6.xml" "$config_path"
 }
 
 setup_b2_data() {
   echo '* setting up b2 data'
+  local config_path=""
+  if [ ! -f "$ENCFS_B2_CONFIG_FILE" ]; then
+    config_path="$ENCFS_B2_CONFIG_FILE"
+  fi
   mount_encrypt_fs 'b2' "$ENCFS_B2_CONFIG_FILE" && \
-    cp "$PLEX_DATA_DIR/.b2-secure/.encfs6.xml" "$ENCFS_B2_CONFIG_FILE"
+    cp "$PLEX_DATA_DIR/.b2-secure/.encfs6.xml" "$config_path"
 }
 
 write_encfs_password() {
