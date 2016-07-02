@@ -37,7 +37,7 @@ mount_encrypt_fs() {
   local folder_data="$PLEX_DATA_DIR/${name}-data"
   local folder_secure="$PLEX_DATA_DIR/.${name}-secure"
   echo "* mount encryted $name"
-  
+
   if [ -d "$folder_data" ]; then
     echo "* unmounting fuse unsecure $name"
     fusermount -u "$folder_data"
@@ -62,7 +62,7 @@ mount_encrypt_fs() {
 setup_local_data() {
   echo '* setting up local data'
   local config_path=""
-  if [ ! -f "$ENCFS_LOCAL_CONFIG_FILE" ]; then
+  if [ -f "$ENCFS_LOCAL_CONFIG_FILE" ]; then
     config_path="$ENCFS_LOCAL_CONFIG_FILE"
   fi
 
@@ -73,7 +73,7 @@ setup_local_data() {
 setup_b2_data() {
   echo '* setting up b2 data'
   local config_path=""
-  if [ ! -f "$ENCFS_B2_CONFIG_FILE" ]; then
+  if [ -f "$ENCFS_B2_CONFIG_FILE" ]; then
     config_path="$ENCFS_B2_CONFIG_FILE"
   fi
   mount_encrypt_fs 'b2' "$ENCFS_B2_CONFIG_FILE" && \
