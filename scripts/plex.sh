@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./base.sh
+source '/tmp/butterfinger-scripts/base.sh'
 
 DOCKER_IMAGE='timhaak/plexpass'
 

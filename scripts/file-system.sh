@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./base.sh
+source '/tmp/butterfinger-scripts/base.sh'
 
 B2_FUSE_DIR="$PROJECTS_DIR/b2_fuse"
 
@@ -21,11 +21,30 @@ install_fusepy() {
 }
 
 mount_b2_fuse() {
-  python "$B2_FUSE_DIR/b2local.py" "$PLEX_DATA_DIR/.b2-secure" "$PLEX_DATA_DIR/b2-data"
+  python "$B2_FUSE_DIR/b2fuse.py" "$PLEX_DATA_DIR/.b2-secure"
 }
 
-setup_local() {
-  encfs "$PLEX_DATA_DIR/.local-secure" "$PLEX_DATA_DIR/local-data"
+mount_encrypt_fs() {
+  local name="$1"
+  encfs "$PLEX_DATA_DIR/.${name}-secure" "$PLEX_DATA_DIR/${name}-data"
+}
+
+setup_local_data() {
+  if [ -f "$ENCFS_LOCAL_CONFIG_FILE" ]; then
+    env ENCFS6_CONFIG="$ENCFS_LOCAL_CONFIG_FILE" mount_encrypt_fs 'local'
+  else
+    mount_encrypt_fs 'local'
+    cp "$PLEX_DATA_DIR/.b2-secure/encfs.xml" "$ENCFS_LOCAL_CONFIG_FILE"
+  fi
+}
+
+setup_b2_data() {
+  if [ -f "$ENCFS_B2_CONFIG_FILE" ]; then
+    env ENCFS6_CONFIG="$ENCFS_B2_CONFIG_FILE" mount_encrypt_fs 'b2'
+  else
+    mount_encrypt_fs 'b2'
+    cp "$PLEX_DATA_DIR/.b2-secure/encfs.xml" "$ENCFS_B2_CONFIG_FILE"
+  fi
 }
 
 write_b2_fuse_config(){
@@ -39,7 +58,8 @@ write_b2_fuse_config(){
 main() {
   echo '* running file-system.sh...'
   install_encfs && \
-    setup_local && \
+    setup_local_data && \
+    setup_b2_data && \
     download_b2_fuse && \
     install_fusepy && \
     write_b2_fuse_config && \
