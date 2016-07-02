@@ -1,6 +1,7 @@
 #!/bin/bash
 
 download_and_source_base() {
+  echo '* downloading base.sh'
   local file_path='/tmp/butterfinger-scripts/base.sh'
   curl -ssL "https://raw.githubusercontent.com/peterdemartini/butterfinger/master/scripts/base.sh?r=${RANDOM}" -o "$file_path"
   source "$file_path"
