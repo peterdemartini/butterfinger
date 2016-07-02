@@ -43,3 +43,9 @@ create_fuse_folder() {
     create_dir "$folder"
   fi
 }
+
+
+export -f download_file
+export -f download_script
+export -f create_dir
+export -f create_fuse_folder
