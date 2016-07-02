@@ -149,8 +149,6 @@ main() {
   if [ "$cmd" == "user" ]; then
     echo '* running user command'
     ssh_to_server_as_butterfinger "$hostname"
-    echo '* done'
-    echo 0
   fi
 
   if [ "$cmd" == "root" ]; then
@@ -161,12 +159,8 @@ main() {
       ssh_to_server_as_root "$hostname" && \
       copy_password "$BUTTERFINGER_PASSWORD" && \
       copy_key 'butterfinger' "$hostname" && \
-      ssh_to_server_as_butterfinger "$hostname" && \
-      echo '* done.' && \
-      exit 0
+      ssh_to_server_as_butterfinger "$hostname"
   fi
-  echo 'Failed to run command'
-  exit 0
 }
 
 main "$@"
