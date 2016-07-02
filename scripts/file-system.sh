@@ -22,9 +22,9 @@ install_fusepy() {
 
 mount_b2_fuse() {
   echo '* mount b2 fuse'
-  pushd "$B2_FUSE_DIR" > /dev/null
+  pushd "$B2_FUSE_DIR"
     python "$B2_FUSE_DIR/b2fuse.py" "$PLEX_DATA_DIR/.b2-secure"
-  popd > /dev/null
+  popd
 }
 
 mount_encrypt_fs() {
