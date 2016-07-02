@@ -63,6 +63,7 @@ generate_install_it() {
   copy_template 'install-it.sh' && \
     replace_in_generated 'install-it.sh' 'username' "$PLEX_USERNAME" && \
     replace_in_generated 'install-it.sh' 'password' "$PLEX_PASSWORD" && \
+    replace_in_generated 'install-it.sh' 'butterfinger-password' "$BUTTERFINGER_PASSWORD" && \
     replace_in_generated 'install-it.sh' 'b2-bucket-id' "$B2_BUCKET_ID" && \
     replace_in_generated 'install-it.sh' 'b2-app-key' "$B2_APP_KEY" && \
     replace_in_generated 'install-it.sh' 'b2-account-id' "$B2_ACCOUNT_ID"
@@ -71,7 +72,7 @@ generate_install_it() {
 generate_setup_as_root(){
   echo '* generate setup-as-root.sh'
   copy_template 'setup-as-root.sh' && \
-    replace_in_generated 'setup-as-root.sh' 'password' "$BUTTERFINGER_PASSWORD"
+    replace_in_generated 'setup-as-root.sh' 'butterfinger-password' "$BUTTERFINGER_PASSWORD"
 }
 
 copy_template() {
