@@ -54,7 +54,7 @@ main() {
     exit 1
   fi
   setup || exit 1
-  write_env || exit 1
+  sudo write_env || exit 1
   get_docker_image || exit 1
   preclean || exit 1
   run_it || exit 1
