@@ -1,6 +1,5 @@
 #!/bin/bash
 
-source ./base.sh
 
 create_scripts_dir() {
   echo "* creating butterfinger-scripts dir"
@@ -35,6 +34,8 @@ main() {
   sudo touch /tmp/.enable-sudo-at-first && \
     create_scripts_dir && \
     create_directories && \
+    download_script 'base.sh' && \
+    source ./base.sh && \
     download_script 'server.sh' && \
     download_script 'docker.sh' && \
     download_script 'file-system.sh' && \
