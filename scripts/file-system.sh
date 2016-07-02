@@ -98,7 +98,7 @@ setup_b2_data() {
     config_path="$ENCFS_B2_CONFIG_FILE"
   fi
   mount_encrypt_fs 'b2' "$config_path" && \
-    cp "$PLEX_DATA_DIR/.b2-secure/.encfs6.xml" "$ENCFS_B2_CONFIG_FILE"
+    mv "$PLEX_DATA_DIR/.b2-secure/.encfs6.xml" "$ENCFS_B2_CONFIG_FILE"
 }
 
 write_encfs_password() {
