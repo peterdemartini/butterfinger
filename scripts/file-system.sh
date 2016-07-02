@@ -52,7 +52,7 @@ mount_encrypt_fs() {
     create_fuse_folder "$folder_secure"
   fi
 
-  echo "* mounting $name"
+  echo "* mounting $name $config_path"
   (cat "$CONFIG_DIR/encfs-passwd" | env ENCFS6_CONFIG="$config_path" \
     encfs -S "$folder_secure" \
     "$folder_data" \
