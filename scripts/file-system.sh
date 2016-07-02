@@ -37,6 +37,7 @@ mount_encrypt_fs() {
   local folder_data="$PLEX_DATA_DIR/${name}-data"
   local folder_secure="$PLEX_DATA_DIR/.${name}-secure"
   echo "* mount encryted $name"
+  
   if [ -d "$folder_data" ]; then
     echo "* unmounting fuse unsecure $name"
     fusermount -u "$folder_data"
@@ -50,8 +51,8 @@ mount_encrypt_fs() {
     sudo rm -rf "$folder_secure"
     create_fuse_folder "$folder_secure"
   fi
-  echo '* mounting'
 
+  echo "* mounting $name"
   (cat "$CONFIG_DIR/encfs-passwd" | env ENCFS6_CONFIG="$config_path" \
     encfs -S "$folder_secure" \
     "$folder_data" \
