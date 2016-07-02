@@ -43,7 +43,7 @@ start_service() {
 }
 
 main() {
-  echo 'running init-plex.sh...'
+  echo '* running init-plex.sh...'
   if [ -z "$PLEX_USERNAME" ]; then
     echo 'Missing PLEX_USERNAME env'
     exit 1
