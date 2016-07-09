@@ -46,8 +46,6 @@ create_shared_dir() {
   local folder="$1"
   echo "* create shared dir $1"
   create_dir "$folder"
-  sudo mount -o bind "$folder" "$folder"
-  sudo mount --make-rshared "$folder"
 }
 
 export -f download_file

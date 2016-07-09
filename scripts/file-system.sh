@@ -32,9 +32,15 @@ copy_oauth_data() {
   fi
 }
 
+create_shared_dir() {
+  echo '* creating shared directory'
+  docker volume create --driver 'local' --opt "device=:$PLEX_DATA_DIR" --name butterfinger-data
+}
+
 main() {
   echo '* running file-system.sh...'
-  download_butterfinger_docker && \
+  create_shared_dir && \
+    download_butterfinger_docker && \
     compose_it && \
     copy_oauth_data && \
     echo '* done.' && \
