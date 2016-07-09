@@ -35,10 +35,7 @@ grant_permissions() {
 download_compose() {
   echo '* download docker composer'
   local base_uri='https://github.com/docker/compose/releases/download/1.6.2'
-  sudo -i
-  curl -L "$base_uri/docker-compose-$(uname -s)-$(uname -m)" \
-    > /usr/local/bin/docker-compose
-  exit
+  sudo curl -L "$base_uri/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 }
 
 setup_compose() {
