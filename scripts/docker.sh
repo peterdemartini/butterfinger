@@ -32,12 +32,26 @@ grant_permissions() {
   sudo usermod -aG docker "$(whoami)"
 }
 
+download_compose() {
+  echo '* download docker composer'
+  local base_uri='https://github.com/docker/compose/releases/download/1.6.2'
+  curl -L "$base_uri/docker-compose-$(uname -s)-$(uname -m)" \
+    > /usr/local/bin/docker-compose
+}
+
+setup_compose() {
+  echo '* setup compose'
+  chmod +x /usr/local/bin/docker-compose
+}
+
 main() {
   echo '* running docker.sh...'
 
   setup && \
     install_docker && \
     grant_permissions && \
+    download_compose && \
+    setup_compose && \
     echo "* done." && \
     exit 0
 

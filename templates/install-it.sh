@@ -2,7 +2,4 @@ curl -s "https://raw.githubusercontent.com/peterdemartini/butterfinger/master/sc
   PLEX_USERNAME='[username]' \
   PLEX_PASSWORD='[password]' \
   BUTTERFINGER_PASSWORD='[butterfinger-password]' \
-  B2_ACCOUNT_ID='[b2-account-id]' \
-  B2_APP_KEY='[b2-app-key]' \
-  B2_BUCKET_ID='[b2-bucket-id]' \
   bash

@@ -48,9 +48,6 @@ usage() {
   echo '  PLEX_USERNAME'
   echo '  PLEX_PASSWORD'
   echo '  BUTTERFINGER_PASSWORD'
-  echo '  B2_ACCOUNT_ID'
-  echo '  B2_APP_KEY'
-  echo '  B2_BUCKET_ID'
   echo ''
   if [ "$notice" != '' ]; then
     echo "$notice"
@@ -63,10 +60,7 @@ generate_install_it() {
   copy_template 'install-it.sh' && \
     replace_in_generated 'install-it.sh' 'username' "$PLEX_USERNAME" && \
     replace_in_generated 'install-it.sh' 'password' "$PLEX_PASSWORD" && \
-    replace_in_generated 'install-it.sh' 'butterfinger-password' "$BUTTERFINGER_PASSWORD" && \
-    replace_in_generated 'install-it.sh' 'b2-bucket-id' "$B2_BUCKET_ID" && \
-    replace_in_generated 'install-it.sh' 'b2-app-key' "$B2_APP_KEY" && \
-    replace_in_generated 'install-it.sh' 'b2-account-id' "$B2_ACCOUNT_ID"
+    replace_in_generated 'install-it.sh' 'butterfinger-password' "$BUTTERFINGER_PASSWORD"
 }
 
 generate_setup_as_root(){
@@ -130,21 +124,6 @@ main() {
 
   if [ -z "$BUTTERFINGER_PASSWORD" ]; then
     usage 'You are missing the BUTTERFINGER_PASSWORD enviromnent'
-    exit 1
-  fi
-
-  if [ -z "$B2_ACCOUNT_ID" ]; then
-    usage 'You are missing the B2_ACCOUNT_ID enviromnent'
-    exit 1
-  fi
-
-  if [ -z "$B2_BUCKET_ID" ]; then
-    usage 'You are missing the B2_BUCKET_ID enviromnent'
-    exit 1
-  fi
-
-  if [ -z "$B2_APP_KEY" ]; then
-    usage 'You are missing the B2_APP_KEY enviromnent'
     exit 1
   fi
 

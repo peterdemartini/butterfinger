@@ -19,10 +19,6 @@ create_directories() {
   create_dir "$SERVICES_DIR"
   create_dir "$PLEX_CONFIG_DIR"
   create_dir "$CONFIG_DIR"
-  create_fuse_folder "$PLEX_DATA_DIR/.local-secure"
-  create_fuse_folder "$PLEX_DATA_DIR/local-data"
-  create_fuse_folder "$PLEX_DATA_DIR/.b2-secure"
-  create_fuse_folder "$PLEX_DATA_DIR/b2-data"
 }
 
 run_script() {
