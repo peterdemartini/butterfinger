@@ -15,7 +15,7 @@ create_scripts_dir() {
 
 create_directories() {
   echo '* creating directories'
-  create_dir "$PROJECTS_DIR"
+  just_create_dir "$PROJECTS_DIR"
   create_dir "$SERVICES_DIR"
   create_dir "$PLEX_CONFIG_DIR"
   create_dir "$CONFIG_DIR"

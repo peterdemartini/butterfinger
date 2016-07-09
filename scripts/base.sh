@@ -28,10 +28,16 @@ download_script(){
   chmod +x "$file_path"
 }
 
+just_create_dir() {
+  local folder="$1"
+  echo "* just create folder $1"
+  sudo mkdir -p "$folder"
+}
+
 create_dir() {
   local folder="$1"
   echo "* create folder $1"
-  sudo mkdir -p "$folder"
+  just_create_dir "$folder"
   sudo chmod -R 0775 "$folder"
   sudo chgrp -R butterfinger "$folder"
 }
@@ -39,9 +45,7 @@ create_dir() {
 create_shared_dir() {
   local folder="$1"
   echo "* create shared dir $1"
-  sudo mkdir -p "$folder"
-  sudo chmod -R 0775 "$folder"
-  sudo chgrp -R butterfinger "$folder"
+  create_dir "$folder"
   sudo mount --bind "$folder" "$folder"
 }
 
@@ -49,3 +53,4 @@ export -f download_file
 export -f download_script
 export -f create_dir
 export -f create_shared_dir
+export -f just_create_dir
