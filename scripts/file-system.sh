@@ -9,9 +9,9 @@ BUTTERFINGER_DOCKER_DIR="$PROJECTS_DIR/butterfinger-docker"
 download_butterfinger_docker(){
   if [ -d "$BUTTERFINGER_DOCKER_DIR" ]; then
     echo '* updating butterfinger_docker'
-    pushd "$BUTTERFINGER_DOCKER_DIR"
-      git pull || return 1
-    popd
+    pushd "$BUTTERFINGER_DOCKER_DIR" > /dev/null
+      git pull > /dev/null || return 1
+    popd > /dev/null
   else
     echo '* download butterfinger_docker'
     git clone https://github.com/peterdemartini/butterfinger-docker.git "$BUTTERFINGER_DOCKER_DIR" || return 1
@@ -20,9 +20,9 @@ download_butterfinger_docker(){
 
 compose_it() {
   echo '* docker compose up'
-  pushd "$BUTTERFINGER_DOCKER_DIR"
+  pushd "$BUTTERFINGER_DOCKER_DIR" > /dev/null
     env ENCFS_PASS="$BUTTERFINGER_PASSWORD" docker-compose up -d
-  popd
+  popd > /dev/null
 }
 
 copy_oauth_data() {
