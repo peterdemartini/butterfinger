@@ -19,6 +19,7 @@ create_directories() {
   create_dir "$SERVICES_DIR"
   create_dir "$PLEX_CONFIG_DIR"
   create_dir "$CONFIG_DIR"
+  create_shared_dir "$PLEX_DATA_DIR"
 }
 
 run_script() {

@@ -1,2 +1,4 @@
 generated/*.sh
+secrets/*
+!secrets/.touch
 *.local.sh

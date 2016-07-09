@@ -35,6 +35,21 @@ ssh_to_server_as_butterfinger() {
   ssh "butterfinger@$hostname" 'bash -s' < './generated/install-it.sh'
 }
 
+get_oauth_data() {
+  local oauth_data_path="$1"
+  if [ -z "$oauth_data_path" ]; then
+    echo '* opening auth in window'
+    echo "* download the oauth_data file to the \"$oauth_data_path\""
+    open "https://tensile-runway-92512.appspot.com"
+  fi
+}
+
+upload_acd_oauth_data() {
+  echo '* uploading acd oauth_data'
+  local oauth_data_path="$1"
+  scp "$oauth_data_path" "butterfinger@$hostname:/home/butterfinger/oauth_data"
+}
+
 usage() {
   local notice="$1"
   echo './init-from-local.sh <subcommand> <hostname>'
@@ -146,10 +161,13 @@ main() {
   echo '* setting up locally'
 
   add_key
+  local oauth_data_path="$PWD/secrets/oauth_data"
 
   if [ "$cmd" == "user" ]; then
     echo '* running user command'
-    ssh_to_server_as_butterfinger "$hostname"
+    get_oauth_data "$oauth_data_path" && \
+      upload_acd_oauth_data "$oauth_data_path" && \
+      ssh_to_server_as_butterfinger "$hostname"
   fi
 
   if [ "$cmd" == "root" ]; then
@@ -160,6 +178,8 @@ main() {
       ssh_to_server_as_root "$hostname" && \
       copy_password "$BUTTERFINGER_PASSWORD" && \
       copy_key 'butterfinger' "$hostname" && \
+      get_oauth_data "$oauth_data_path" && \
+      upload_acd_oauth_data "$oauth_data_path" && \
       ssh_to_server_as_butterfinger "$hostname"
   fi
 }

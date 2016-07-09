@@ -18,9 +18,25 @@ download_butterfinger_docker(){
   fi
 }
 
+compose_it() {
+  echo '* docker compose up'
+  pushd "$BUTTERFINGER_DOCKER_DIR"
+    env ENCFS_PASS="$BUTTERFINGER_PASSWORD" docker-compose up -d
+  popd
+}
+
+copy_oauth_data() {
+  local oauth_data_path='/home/butterfinger/oauth_data'
+  if [ -f "$oauth_data_path" ]; then
+    sudo mv "$oauth_data_path" "$PLEX_DATA_DIR/acd_cli/oauth_data"
+  fi
+}
+
 main() {
   echo '* running file-system.sh...'
   download_butterfinger_docker && \
+    compose_it && \
+    copy_oauth_data && \
     echo '* done.' && \
     exit 0
 }

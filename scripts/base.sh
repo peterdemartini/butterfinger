@@ -36,6 +36,16 @@ create_dir() {
   sudo chgrp -R butterfinger "$folder"
 }
 
+create_shared_dir() {
+  local folder="$1"
+  echo "* create shared dir $1"
+  sudo mkdir -p "$folder"
+  sudo chmod -R 0775 "$folder"
+  sudo chgrp -R butterfinger "$folder"
+  sudo mount --bind "$folder" "$folder"
+}
+
 export -f download_file
 export -f download_script
 export -f create_dir
+export -f create_shared_dir
