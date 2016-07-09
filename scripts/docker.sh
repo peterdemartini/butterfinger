@@ -35,13 +35,13 @@ grant_permissions() {
 download_compose() {
   echo '* download docker composer'
   local base_uri='https://github.com/docker/compose/releases/download/1.6.2'
-  curl -L "$base_uri/docker-compose-$(uname -s)-$(uname -m)" \
+  sudo curl -L "$base_uri/docker-compose-$(uname -s)-$(uname -m)" \
     > /usr/local/bin/docker-compose
 }
 
 setup_compose() {
   echo '* setup compose'
-  chmod +x /usr/local/bin/docker-compose
+  sudo chmod +x /usr/local/bin/docker-compose
 }
 
 main() {
