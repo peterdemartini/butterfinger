@@ -26,7 +26,7 @@ compose_it() {
 }
 
 copy_oauth_data() {
-  local oauth_data_path='/home/butterfinger/oauth_data'
+  local oauth_data_path='/home/butterfinger/secrets/oauth_data'
   if [ -f "$oauth_data_path" ]; then
     sudo mv "$oauth_data_path" "$PLEX_DATA_DIR/acd_cli/oauth_data"
   fi
@@ -34,7 +34,9 @@ copy_oauth_data() {
 
 create_shared_dir() {
   echo '* creating shared directory'
-  docker volume create --driver 'local' --opt "device=:$PLEX_DATA_DIR" --name butterfinger-data
+  sudo mount --bind "$PLEX_DATA_DIR" "$PLEX_DATA_DIR" && \
+    sudo mount --make-shared "$PLEX_DATA_DIR" && \
+    findmnt -o TARGET,PROPAGATION "$PLEX_DATA_DIR"
 }
 
 main() {

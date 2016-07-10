@@ -44,10 +44,14 @@ get_oauth_data() {
   fi
 }
 
-upload_acd_oauth_data() {
-  echo '* uploading acd oauth_data'
-  local oauth_data_path="$1"
-  scp "$oauth_data_path" "butterfinger@$hostname:/home/butterfinger/oauth_data"
+upload_to_butterfinger() {
+  echo '* uploading to butterfinger'
+  local hostname="$1"
+  local path="$2"
+  local to="$3"
+  local to_dir="$(dirname /home/butterfinger/$to)"
+  ssh "butterfinger@${hostname}" "mkdir -p $to_dir" && \
+    scp "$from" "butterfinger@$hostname:/home/butterfinger/$to"
 }
 
 usage() {
@@ -73,8 +77,8 @@ usage() {
 generate_install_it() {
   echo '* generate install-it.sh'
   copy_template 'install-it.sh' && \
-    replace_in_generated 'install-it.sh' 'username' "$PLEX_USERNAME" && \
-    replace_in_generated 'install-it.sh' 'password' "$PLEX_PASSWORD" && \
+    replace_in_generated 'install-it.sh' 'plex-username' "$PLEX_USERNAME" && \
+    replace_in_generated 'install-it.sh' 'plex-password' "$PLEX_PASSWORD" && \
     replace_in_generated 'install-it.sh' 'butterfinger-password' "$BUTTERFINGER_PASSWORD"
 }
 
@@ -84,10 +88,36 @@ generate_setup_as_root(){
     replace_in_generated 'setup-as-root.sh' 'butterfinger-password' "$BUTTERFINGER_PASSWORD"
 }
 
+generate_config_and_upload() {
+  local hostname="$1"
+  local config_file="$2"
+  generate_config "$config_file" && \
+    upload_to_butterfinger "$hostname" "$PWD/templates/config/$config_file" "config/$config_file"
+}
+
+generate_config() {
+  local config_file="$1"
+  echo "* generating config $config_file"
+  copy_template "config/$config_file" && \
+    replace_in_generated "config/$config_file" 'plex-username' "$PLEX_USERNAME" && \
+    replace_in_generated "config/$config_file" 'plex-password' "$PLEX_USERNAME" && \
+    replace_in_generated "config/$config_file" 'butterfinger-password' "$BUTTERFINGER_PASSWORD"
+}
+
 copy_template() {
   local template_name="$1"
   echo "* copying from template $template_name"
   cp "./templates/$template_name" "./generated/$template_name"
+}
+
+wait_for_oauth_data() {
+  local oauth_data_path="$1"
+  echo '* waiting for oauth_data'
+  while [ ! -f "$oauth_data_path" ]
+  do
+    echo '* still waiting for oauth_data'
+    sleep 2
+  done
 }
 
 replace_in_generated() {
@@ -95,6 +125,9 @@ replace_in_generated() {
   local key="$2"
   local value="$(echo "$3" | sed -e 's/[\/&]/\\&/g')"
   local file="./generated/$template_name"
+  if [ ! -d "$(dirname $template_name)" ]; then
+    mkdir -p "$(dirname $template_name)"
+  fi
   echo "* replacing $key in template $template_name"
   if [ ! -f "$file" ]; then
     echo "Missing generated template $file"
@@ -152,7 +185,17 @@ main() {
     exit 1
   fi
 
-  generate_install_it && generate_setup_as_root
+  generate_install_it && \
+    generate_setup_as_root && \
+    get_oauth_data "$oauth_data_path" && \
+    wait_for_oauth_data "$oauth_data_path" && \
+    upload_to_butterfinger "$hostname" "$oauth_data_path" 'secrets/oauth_data' && \
+    generate_config_and_upload "$hostname" 'acd-encfs.env' && \
+    generate_config_and_upload "$hostname" 'acd-mount.env' && \
+    generate_config_and_upload "$hostname" 'local-encfs.env' && \
+    generate_config_and_upload "$hostname" 'plex-media-server.env' && \
+    generate_config_and_upload "$hostname" 'unionfs.env'
+
   if [ "$?" != "0" ]; then
     echo "* failed to write templates"
     exit 1
@@ -165,9 +208,7 @@ main() {
 
   if [ "$cmd" == "user" ]; then
     echo '* running user command'
-    get_oauth_data "$oauth_data_path" && \
-      upload_acd_oauth_data "$oauth_data_path" && \
-      ssh_to_server_as_butterfinger "$hostname"
+    ssh_to_server_as_butterfinger "$hostname"
   fi
 
   if [ "$cmd" == "root" ]; then
@@ -178,8 +219,6 @@ main() {
       ssh_to_server_as_root "$hostname" && \
       copy_password "$BUTTERFINGER_PASSWORD" && \
       copy_key 'butterfinger' "$hostname" && \
-      get_oauth_data "$oauth_data_path" && \
-      upload_acd_oauth_data "$oauth_data_path" && \
       ssh_to_server_as_butterfinger "$hostname"
   fi
 }

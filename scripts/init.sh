@@ -29,12 +29,18 @@ run_script() {
   "$file_path"
 }
 
+copy_butterfinger_config() {
+  echo '* copying butterfinger config'
+  mv /home/butterfinger/config/* "$CONFIG_DIR"
+}
+
 main() {
   echo "* running init.sh..."
   sudo touch /tmp/.enable-sudo-at-first && \
     download_and_source_base && \
     create_scripts_dir && \
     create_directories && \
+    copy_butterfinger_config && \
     download_script 'server.sh' && \
     download_script 'docker.sh' && \
     download_script 'file-system.sh' && \

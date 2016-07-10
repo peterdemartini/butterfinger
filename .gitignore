@@ -1,4 +1,5 @@
 generated/*.sh
+generated/config/*
 secrets/*
 !secrets/.touch
 *.local.sh
