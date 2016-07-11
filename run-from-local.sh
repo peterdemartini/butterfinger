@@ -47,11 +47,11 @@ get_oauth_data() {
 upload_to_butterfinger() {
   echo '* uploading to butterfinger'
   local hostname="$1"
-  local path="$2"
+  local from="$2"
   local to="$3"
   local to_dir="$(dirname /home/butterfinger/$to)"
   ssh "butterfinger@${hostname}" "mkdir -p $to_dir" && \
-    scp "$from" "butterfinger@$hostname:/home/butterfinger/$to"
+    scp -q "$from" "butterfinger@$hostname:/home/butterfinger/$to"
 }
 
 usage() {
@@ -91,8 +91,12 @@ generate_setup_as_root(){
 generate_config_and_upload() {
   local hostname="$1"
   local config_file="$2"
+  local generated_config_dir="$PWD/generated/config"
+  if [ ! -d "$generated_config_dir" ]; then
+    mkdir -p "$generated_config_dir" || return 1
+  fi
   generate_config "$config_file" && \
-    upload_to_butterfinger "$hostname" "$PWD/templates/config/$config_file" "config/$config_file"
+    upload_to_butterfinger "$hostname" "$generated_config_dir/$config_file" "config/$config_file"
 }
 
 generate_config() {
@@ -112,10 +116,9 @@ copy_template() {
 
 wait_for_oauth_data() {
   local oauth_data_path="$1"
-  echo '* waiting for oauth_data'
   while [ ! -f "$oauth_data_path" ]
   do
-    echo '* still waiting for oauth_data'
+    echo '* waiting for oauth_data'
     sleep 2
   done
 }
@@ -125,9 +128,6 @@ replace_in_generated() {
   local key="$2"
   local value="$(echo "$3" | sed -e 's/[\/&]/\\&/g')"
   local file="./generated/$template_name"
-  if [ ! -d "$(dirname $template_name)" ]; then
-    mkdir -p "$(dirname $template_name)"
-  fi
   echo "* replacing $key in template $template_name"
   if [ ! -f "$file" ]; then
     echo "Missing generated template $file"
@@ -154,6 +154,7 @@ remove_from_known_hosts(){
 main() {
   local cmd="$1"
   local hostname="$2"
+  local oauth_data_path="$PWD/secrets/oauth_data"
 
   if [ -z "$cmd" ]; then
     usage 'Missing command argument'
@@ -186,8 +187,29 @@ main() {
   fi
 
   generate_install_it && \
-    generate_setup_as_root && \
-    get_oauth_data "$oauth_data_path" && \
+    generate_setup_as_root
+
+  if [ "$?" != "0" ]; then
+    echo "* failed to write templates"
+    exit 1
+  fi
+
+  if [ "$cmd" == "root" ]; then
+    echo '* running root command'
+    remove_from_known_hosts "$hostname" && \
+      copy_password "$ROOT_PASSWORD" && \
+      copy_key 'root' "$hostname" && \
+      ssh_to_server_as_root "$hostname" && \
+      copy_password "$BUTTERFINGER_PASSWORD" && \
+      copy_key 'butterfinger' "$hostname" && \
+      echo '* done with root' && \
+      exit 0
+    echo '* failed with root'
+    exit 1
+  fi
+
+
+  get_oauth_data "$oauth_data_path" && \
     wait_for_oauth_data "$oauth_data_path" && \
     upload_to_butterfinger "$hostname" "$oauth_data_path" 'secrets/oauth_data' && \
     generate_config_and_upload "$hostname" 'acd-encfs.env' && \
@@ -204,22 +226,10 @@ main() {
   echo '* setting up locally'
 
   add_key
-  local oauth_data_path="$PWD/secrets/oauth_data"
 
   if [ "$cmd" == "user" ]; then
     echo '* running user command'
     ssh_to_server_as_butterfinger "$hostname"
-  fi
-
-  if [ "$cmd" == "root" ]; then
-    echo '* running root command'
-    remove_from_known_hosts "$hostname" && \
-      copy_password "$ROOT_PASSWORD" && \
-      copy_key 'root' "$hostname" && \
-      ssh_to_server_as_root "$hostname" && \
-      copy_password "$BUTTERFINGER_PASSWORD" && \
-      copy_key 'butterfinger' "$hostname" && \
-      ssh_to_server_as_butterfinger "$hostname"
   fi
 }
 

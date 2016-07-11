@@ -34,9 +34,15 @@ copy_butterfinger_config() {
   mv /home/butterfinger/config/* "$CONFIG_DIR"
 }
 
+make_butterfinger_tmp() {
+  echo '* making butterfinger tmp'
+  mkdir -p /tmp/butterfinger-scripts
+}
+
 main() {
   echo "* running init.sh..."
   sudo touch /tmp/.enable-sudo-at-first && \
+    make_butterfinger_tmp && \
     download_and_source_base && \
     create_scripts_dir && \
     create_directories && \
