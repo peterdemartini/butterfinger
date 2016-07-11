@@ -28,6 +28,8 @@ compose_it() {
 copy_oauth_data() {
   local oauth_data_path='/home/butterfinger/secrets/oauth_data'
   if [ -f "$oauth_data_path" ]; then
+    echo '* moving oauth_data secrets'
+    create_dir "$PLEX_DATA_DIR/acd_cli"
     sudo mv "$oauth_data_path" "$PLEX_DATA_DIR/acd_cli/oauth_data"
   fi
 }
