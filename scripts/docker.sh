@@ -17,7 +17,7 @@ move_service() {
 
 add_mounting_flags() {
   echo '* mounting flags'
-  sed -i 's/MountFlags=slave/#MountFlags=slave/' /etc/systemd/system/docker.service
+  sudo sed -i 's/MountFlags=slave/#MountFlags=slave/' /etc/systemd/system/docker.service
 }
 
 reload_daemon() {
