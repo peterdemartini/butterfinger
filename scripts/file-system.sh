@@ -32,7 +32,6 @@ copy_oauth_data() {
   if [ -f "$oauth_data_path" ]; then
     echo '* moving oauth_data secrets'
     sudo cp "$oauth_data_path" "$PLEX_CONFIG_DIR/acd-cli/oauth_data"
-    cat "$PLEX_CONFIG_DIR/acd-cli/oauth_data"
   fi
 }
 
