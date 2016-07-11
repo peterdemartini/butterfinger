@@ -19,7 +19,7 @@ download_butterfinger_docker(){
 }
 
 compose_it() {
-  echo '* docker compose up'
+  echo '* docker compose it'
   pushd "$BUTTERFINGER_DOCKER_DIR" > /dev/null
     docker-compose stop
     docker-compose build && \
@@ -31,8 +31,8 @@ copy_oauth_data() {
   local oauth_data_path='/home/butterfinger/secrets/oauth_data'
   if [ -f "$oauth_data_path" ]; then
     echo '* moving oauth_data secrets'
-    create_dir "$PLEX_CONFIG_DIR/acd_cli"
-    sudo mv "$oauth_data_path" "$PLEX_CONFIG_DIR/acd_cli/oauth_data"
+    create_dir "$PLEX_CONFIG_DIR/acd-cli"
+    sudo mv "$oauth_data_path" "$PLEX_CONFIG_DIR/acd-cli/oauth_data"
   fi
 }
 
