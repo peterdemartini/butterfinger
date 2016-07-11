@@ -68,8 +68,7 @@ main() {
   setup && \
     install_docker && \
     grant_permissions && \
-    move_service && \
-    add_mounting_flags && \
+    move_service_and_add_flags && \
     reload_daemon && \
     download_compose && \
     setup_compose && \
