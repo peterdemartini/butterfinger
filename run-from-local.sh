@@ -36,11 +36,11 @@ ssh_to_server_as_butterfinger() {
 }
 
 get_oauth_data() {
-  local oauth_data_path="$1"
+  local download_oauth_data_path="$1"
+  local oauth_data_path="$2"
   if [ ! -f "$oauth_data_path" ]; then
     echo '* opening auth in window'
-    echo "* download the oauth_data file to the \"$oauth_data_path\""
-    rm ~/Downloads/oauth_data*
+    rm $download_oauth_data_path*
     open "https://tensile-runway-92512.appspot.com"
   fi
 }
@@ -116,12 +116,14 @@ copy_template() {
 }
 
 wait_for_oauth_data() {
-  local oauth_data_path="$1"
-  while [ ! -f "$oauth_data_path" ]
+  local download_oauth_data_path="$1"
+  local oauth_data_path="$2"
+  while [ ! -f "$download_oauth_data_path" ]
   do
     echo '* waiting for oauth_data'
     sleep 2
   done
+  cp "$download_oauth_data_path" "$oauth_data_path"
 }
 
 replace_in_generated() {
@@ -156,6 +158,7 @@ main() {
   local cmd="$1"
   local hostname="$2"
   local oauth_data_path="$PWD/secrets/oauth_data"
+  local download_oauth_data_path="$HOME/Downloads/oauth_data"
 
   if [ -z "$cmd" ]; then
     usage 'Missing command argument'
@@ -210,9 +213,10 @@ main() {
   fi
 
   rm "$oauth_data_path"
+  rm "$download_oauth_data_path"
 
-  get_oauth_data "$oauth_data_path" && \
-    wait_for_oauth_data "$oauth_data_path" && \
+  get_oauth_data "$download_oauth_data_path" "$oauth_data_path" && \
+    wait_for_oauth_data "$download_oauth_data_path" "$oauth_data_path" && \
     upload_to_butterfinger "$hostname" "$oauth_data_path" 'secrets/oauth_data' && \
     generate_config_and_upload "$hostname" 'acd-encfs.env' && \
     generate_config_and_upload "$hostname" 'acd-mount.env' && \
