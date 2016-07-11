@@ -10,18 +10,13 @@ remove_docker() {
   sudo apt-get remove --auto-remove docker
 }
 
-move_service() {
-  echo '* move service'
-  sudo cp /lib/systemd/system/docker.service /etc/systemd/system/
-}
-
-add_mounting_flags() {
-  echo '* mounting flags'
-  local file_path="$file_path"
-  sudo sed -i .bk -e 's/MountFlags=slave/#MountFlags=slave/' "$file_path"
-  if [ -f "$file_path.bk" ]; then
-    rm "$file_path.bk"
-  fi
+move_service_and_add_flags() {
+  echo '* move service and add mounting flags'
+  local form_path='/lib/systemd/system/docker.service'
+  local to_path='/etc/systemd/system/docker.service'
+  sudo cat "$form_path" | \
+    sed -e 's/MountFlags=slave/#MountFlags=slave/' | \
+    sudo tee "$to_path" > /dev/null
 }
 
 reload_daemon() {
