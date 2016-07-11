@@ -10,6 +10,22 @@ remove_docker() {
   sudo apt-get remove --auto-remove docker
 }
 
+move_service() {
+  echo '* move service'
+  cp /usr/lib/systemd/system/docker.service /etc/systemd/system/
+}
+
+add_mounting_flags() {
+  echo '* mounting flags'
+  sed -i 's/MountFlags=slave/#MountFlags=slave/' /etc/systemd/system/docker.service
+}
+
+reload_daemon() {
+  echo '* reloading daemon'
+  systemctl daemon-reload && \
+    systemctl restart docker.service
+}
+
 setup() {
   if [ -z "$(which dmsetup)" ]; then
     echo '* installing dmsetup'
@@ -53,6 +69,9 @@ main() {
   setup && \
     install_docker && \
     grant_permissions && \
+    move_service && \
+    add_mounting_flags && \
+    reload_daemon && \
     download_compose && \
     setup_compose && \
     echo "* done." && \
