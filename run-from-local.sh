@@ -45,10 +45,10 @@ get_oauth_data() {
 }
 
 upload_to_butterfinger() {
-  echo '* uploading to butterfinger'
   local hostname="$1"
   local from="$2"
   local to="$3"
+  echo "* uploading to butterfinger $to"
   local to_dir="$(dirname /home/butterfinger/$to)"
   ssh "butterfinger@${hostname}" "mkdir -p $to_dir" && \
     scp -q "$from" "butterfinger@$hostname:/home/butterfinger/$to"

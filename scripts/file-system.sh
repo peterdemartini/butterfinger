@@ -31,16 +31,20 @@ copy_oauth_data() {
   local oauth_data_path='/home/butterfinger/secrets/oauth_data'
   if [ -f "$oauth_data_path" ]; then
     echo '* moving oauth_data secrets'
-    create_dir "$PLEX_CONFIG_DIR/acd-cli"
     sudo cp "$oauth_data_path" "$PLEX_CONFIG_DIR/acd-cli/oauth_data"
+    cat "$PLEX_CONFIG_DIR/acd-cli/oauth_data"
   fi
+}
+
+is_not_shared() {
+  findmnt -o TARGET,PROPAGATION "$PLEX_DATA_DIR" | grep -v "$PLEX_DATA_DIR"
 }
 
 create_shared_dir() {
   echo '* creating shared directory'
-  sudo mount --bind "$PLEX_DATA_DIR" "$PLEX_DATA_DIR" && \
-    sudo mount --make-shared "$PLEX_DATA_DIR" && \
-    findmnt -o TARGET,PROPAGATION "$PLEX_DATA_DIR"
+  is_not_shared && \
+    sudo mount --bind "$PLEX_DATA_DIR" "$PLEX_DATA_DIR" && \
+    sudo mount --make-shared "$PLEX_DATA_DIR"
 }
 
 main() {
