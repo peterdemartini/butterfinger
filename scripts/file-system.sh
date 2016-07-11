@@ -34,7 +34,7 @@ copy_oauth_data() {
   if [ -f "$oauth_data_path" ]; then
     echo '* moving oauth_data secrets'
     rm "$to_path"
-    cp "$oauth_data_path" "$to_path"
+    sudo cp "$oauth_data_path" "$to_path"
   fi
 }
 
