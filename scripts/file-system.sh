@@ -21,7 +21,9 @@ download_butterfinger_docker(){
 compose_it() {
   echo '* docker compose up'
   pushd "$BUTTERFINGER_DOCKER_DIR" > /dev/null
-    env ENCFS_PASS="$BUTTERFINGER_PASSWORD" docker-compose up -d
+    docker-compose stop
+    docker-compose build && \
+      env ENCFS_PASS="$BUTTERFINGER_PASSWORD" docker-compose up -d
   popd > /dev/null
 }
 

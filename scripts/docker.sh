@@ -39,7 +39,10 @@ install_docker() {
     return 0
   fi
   echo '* installing docker'
-  curl -sSL https://get.docker.com/ | sh
+  curl -sSL https://get.docker.com/ | sh && \
+    grant_permissions && \
+    move_service_and_add_flags && \
+    reload_daemon
 }
 
 grant_permissions() {
@@ -67,9 +70,6 @@ main() {
 
   setup && \
     install_docker && \
-    grant_permissions && \
-    move_service_and_add_flags && \
-    reload_daemon && \
     download_compose && \
     setup_compose && \
     echo "* done." && \
