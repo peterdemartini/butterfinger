@@ -36,16 +36,14 @@ copy_oauth_data() {
   fi
 }
 
-is_not_shared() {
-  findmnt -o TARGET,PROPAGATION "$PLEX_DATA_DIR" | \
-    grep -v 'TARGET' | \
-    grep -v "$PLEX_DATA_DIR"
+is_shared() {
+  findmnt -o TARGET,PROPAGATION "$PLEX_DATA_DIR" | grep "$PLEX_DATA_DIR"
 }
 
 create_shared_dir() {
   echo '* creating shared directory'
-  is_not_shared && \
-    sudo mount --bind "$PLEX_DATA_DIR" "$PLEX_DATA_DIR" && \
+  is_shared && return 0  
+  sudo mount --bind "$PLEX_DATA_DIR" "$PLEX_DATA_DIR" && \
     sudo mount --make-shared "$PLEX_DATA_DIR"
 }
 
