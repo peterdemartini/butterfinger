@@ -12,7 +12,7 @@ remove_docker() {
 
 move_service() {
   echo '* move service'
-  cp /usr/lib/systemd/system/docker.service /etc/systemd/system/
+  sudo cp /lib/systemd/system/docker.service /etc/systemd/system/
 }
 
 add_mounting_flags() {
