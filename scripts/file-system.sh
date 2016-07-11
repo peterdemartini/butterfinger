@@ -39,7 +39,7 @@ copy_oauth_data() {
 is_not_shared() {
   findmnt -o TARGET,PROPAGATION "$PLEX_DATA_DIR" | \
     grep -v 'TARGET' | \
-    grep -v "$PLEX_DATA_DIR" \
+    grep -v "$PLEX_DATA_DIR"
 }
 
 create_shared_dir() {
