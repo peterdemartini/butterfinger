@@ -40,6 +40,7 @@ get_oauth_data() {
   if [ ! -f "$oauth_data_path" ]; then
     echo '* opening auth in window'
     echo "* download the oauth_data file to the \"$oauth_data_path\""
+    rm ~/Downloads/oauth_data*
     open "https://tensile-runway-92512.appspot.com"
   fi
 }
@@ -208,6 +209,7 @@ main() {
     exit 1
   fi
 
+  rm "$oauth_data_path"
 
   get_oauth_data "$oauth_data_path" && \
     wait_for_oauth_data "$oauth_data_path" && \
