@@ -104,7 +104,7 @@ generate_config() {
   echo "* generating config $config_file"
   copy_template "config/$config_file" && \
     replace_in_generated "config/$config_file" 'plex-username' "$PLEX_USERNAME" && \
-    replace_in_generated "config/$config_file" 'plex-password' "$PLEX_USERNAME" && \
+    replace_in_generated "config/$config_file" 'plex-password' "$PLEX_PASSWORD" && \
     replace_in_generated "config/$config_file" 'butterfinger-password' "$BUTTERFINGER_PASSWORD"
 }
 
