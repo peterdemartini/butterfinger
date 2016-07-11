@@ -37,7 +37,7 @@ ssh_to_server_as_butterfinger() {
 
 get_oauth_data() {
   local oauth_data_path="$1"
-  if [ -z "$oauth_data_path" ]; then
+  if [ ! -f "$oauth_data_path" ]; then
     echo '* opening auth in window'
     echo "* download the oauth_data file to the \"$oauth_data_path\""
     open "https://tensile-runway-92512.appspot.com"

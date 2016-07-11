@@ -22,6 +22,7 @@ compose_it() {
   echo '* docker compose it'
   pushd "$BUTTERFINGER_DOCKER_DIR" > /dev/null
     docker-compose stop
+    docker-compose rm --force
     docker-compose build && \
       env ENCFS_PASS="$BUTTERFINGER_PASSWORD" docker-compose up -d
   popd > /dev/null
@@ -36,7 +37,9 @@ copy_oauth_data() {
 }
 
 is_not_shared() {
-  findmnt -o TARGET,PROPAGATION "$PLEX_DATA_DIR" | grep -v "$PLEX_DATA_DIR"
+  findmnt -o TARGET,PROPAGATION "$PLEX_DATA_DIR" | \
+    grep -v 'TARGET' | \
+    grep -v "$PLEX_DATA_DIR" \
 }
 
 create_shared_dir() {
