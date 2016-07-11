@@ -30,9 +30,11 @@ compose_it() {
 
 copy_oauth_data() {
   local oauth_data_path='/home/butterfinger/secrets/oauth_data'
+  local to_path="$PLEX_CONFIG_DIR/acd-cli/oauth_data"
   if [ -f "$oauth_data_path" ]; then
     echo '* moving oauth_data secrets'
-    sudo cp "$oauth_data_path" "$PLEX_CONFIG_DIR/acd-cli/oauth_data"
+    rm "$to_path"
+    cp "$oauth_data_path" "$to_path"
   fi
 }
 
@@ -42,7 +44,7 @@ is_shared() {
 
 create_shared_dir() {
   echo '* creating shared directory'
-  is_shared && return 0  
+  is_shared && return 0
   sudo mount --bind "$PLEX_DATA_DIR" "$PLEX_DATA_DIR" && \
     sudo mount --make-shared "$PLEX_DATA_DIR"
 }
