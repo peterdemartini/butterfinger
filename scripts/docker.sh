@@ -21,8 +21,8 @@ move_service_and_add_flags() {
 
 reload_daemon() {
   echo '* reloading daemon'
-  systemctl daemon-reload && \
-    systemctl restart docker.service
+  sudo systemctl daemon-reload && \
+    sudo systemctl restart docker.service
 }
 
 setup() {
