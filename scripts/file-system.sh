@@ -44,9 +44,9 @@ create_shared_dir() {
 main() {
   echo '* running file-system.sh...'
   create_shared_dir && \
+    copy_oauth_data && \
     download_butterfinger_docker && \
     compose_it && \
-    copy_oauth_data && \
     echo '* done.' && \
     exit 0
 }
