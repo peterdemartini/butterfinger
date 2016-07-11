@@ -17,7 +17,11 @@ move_service() {
 
 add_mounting_flags() {
   echo '* mounting flags'
-  sudo sed -i 's/MountFlags=slave/#MountFlags=slave/' /etc/systemd/system/docker.service
+  local file_path="$file_path"
+  sudo sed -i .bk -e 's/MountFlags=slave/#MountFlags=slave/' "$file_path"
+  if [ -f "$file_path.bk" ]; then
+    rm "$file_path.bk"
+  fi
 }
 
 reload_daemon() {
