@@ -2,7 +2,7 @@
 
 export BASE_DIR='/opt/butterfinger'
 export PLEX_CONFIG_DIR="$BASE_DIR/plex/config"
-export PLEX_DATA_DIR="$BASE_DIR/data"
+export PLEX_DATA_DIR="/mnt/butterfinger"
 export SERVICES_DIR="$BASE_DIR/services"
 export PROJECTS_DIR="$BASE_DIR/projects"
 export CONFIG_DIR="$BASE_DIR/config"

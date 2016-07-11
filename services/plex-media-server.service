@@ -13,7 +13,7 @@ ExecStart=/usr/bin/docker run \
   --rm --name plex-media-server \
   --env-file '/opt/butterfinger/config/plex-media-server.env' \
   -v '/opt/butterfinger/config:/config' \
-  -v '/opt/butterfinger/data:/data' \
+  -v '/mnt/butterfinger:/data' \
   -p 80:32400 timhaak/plexpass
 
 [Install]
