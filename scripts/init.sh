@@ -18,6 +18,7 @@ create_directories() {
   create_dir "$SERVICES_DIR"
   create_dir "$PLEX_CONFIG_DIR"
   create_dir "$PLEX_CONFIG_DIR/plex"
+  sudo chown 797:797 -R "$PLEX_CONFIG_DIR/plex"
   create_dir "$PLEX_CONFIG_DIR/acd-cli"
   create_dir "$CONFIG_DIR"
   create_shared_dir "$PLEX_DATA_DIR"
