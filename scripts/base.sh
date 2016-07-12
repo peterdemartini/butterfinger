@@ -46,6 +46,7 @@ create_shared_dir() {
   local folder="$1"
   echo "* create shared dir $1"
   create_dir "$folder"
+  sudo chmod +x "$folder"
 }
 
 export -f download_file
